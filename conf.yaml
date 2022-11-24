@@ -1,0 +1,485 @@
+hvFiles_dir: '/work/opa/bsfs-dev/hydroval_outputs'
+plot_dir: '/work/opa/bsfs-dev/hydroval_outputs/plots'
+pq_path: '/work/opa/sc33616/nemo/tools/bs-mfc-pq-2-refactor/runs'
+bproject: '0512'
+mesh_mask: '/data/opa/bs-mod/upstream_bs-nrt/baseline/geodta/meshmask_bs-nrt_fullBox.nc'
+
+profiles:
+  observationFiles: '/work/opa/ej03515/intermediate/argo/argo_{year}.nc'
+  outdir:  '{plot_dir}/profiles/'
+  variables: ['temperature','salinity']
+  postproc:
+    bins: [2, 5, 10, 20, 30, 50, 75, 100, 200, 500, 1000]
+    filters:
+      threshold:
+        temperature: 5
+        salinity: 2
+    area:
+      Domain:
+        box:
+          xmin: 27
+          xmax: 42.5
+          ymin: 40
+          ymax: 47
+        metrics:
+          bias:
+            range: [[-3, 1.5],[-1,1]]
+          rmse:
+            range: [[0, 5],[0,1]]
+      NW-Bosphorus(z2):
+        box:
+          xmin: 27
+          xmax: 32
+          ymin: 41
+          ymax: 43
+        metrics:
+          bias:
+            range: [[-3, 1.5],[-1,1]] # first range is for temp the second one for sal
+          rmse:
+            range: [[0, 5],[0,1]]
+
+
+#      NW(z1):
+#        box:
+#          xmin: 27
+#          xmax: 34
+#          ymin: 43
+#          ymax: 47
+#        metrics:
+#          bias:
+#            range: [[-3, 1.5],[-1,1]]
+#          rmse:
+#            range: [[0, 5],[0,1]]
+#      Crimea_Kerch(z3):
+#        box:
+#          xmin: 32
+#          xmax: 38
+#          ymin: 43.5
+#          ymax: 46
+#        metrics:
+#          bias:
+#            range: [[-3, 1.5],[-1,1]]
+#          rmse:
+#            range: [[0, 5],[0,1]]
+#      SE-Batumi(z4):
+#        box:
+#          xmin: 38
+#          xmax: 42
+#          ymin: 40.5
+#          ymax: 45
+#        metrics:
+#          bias:
+#            range: [[-3, 1.5],[-1,1]]
+#          rmse:
+#            range: [[0, 5],[0,1]]
+#      S-Sinop(z5):
+#        box:
+#          xmin: 31
+#          xmax: 38
+#          ymin: 40.5
+#          ymax: 43
+#        metrics:
+#          bias:
+#            range: [[-3, 1.5],[-1,1]]
+#          rmse:
+#            range: [[0, 5],[0,1]]
+#      HighWaves:
+#        box:
+#          xmin: 30
+#          xmax: 34
+#          ymin: 42.3
+#          ymax: 44.1
+#        metrics:
+#          bias:
+#            range: [[-3, 1.5],[-1,1]]
+#          rmse:
+#            range: [[0, 5],[0,1]]
+#      LowWaves:
+#        box:
+#          xmin: 39
+#          xmax: 42
+#          ymin: 41
+#          ymax: 44
+#        metrics:
+#          bias:
+#            range: [[-3, 1.5],[-1,1]]
+#          rmse:
+#            range: [[0, 5],[0,1]]
+
+timeseriesArgo:
+  observationFiles: '/work/opa/ej03515/intermediate/argo/argo_{year}.nc'
+  outdir: '{plot_dir}/timeseries_Argo/'
+  variables: ['temperature','salinity']
+  argoProvider: 'CMEMS' # select CMEMS or CORA
+  postproc:
+    bins: [5, 10, 50,  150,250] #[5, 20, 50, 80,100, 120]
+    filters:
+      threshold:
+        temperature: 5
+        salinity: 2
+    area:
+      Domain:
+        box:
+          xmin: 27
+          xmax: 42.5
+          ymin: 40
+          ymax: 47
+        metrics:
+          bias:
+            range: [[-3, 1.5],[-1,1]]
+          rmse:
+            range: [[0, 5],[0,1]]
+#      NW(z1):
+#        box:
+#          xmin: 27
+#          xmax: 33.7
+#          ymin: 44.4
+#          ymax: 47
+#        metrics:
+#          bias:
+#            range: [[-3, 1.5],[-1,1]]
+#          rmse:
+#            range: [[0, 5],[0,1]]
+#      Central(z3):
+#        box:
+#          xmin: 33.7
+#          xmax: 38
+#          ymin: 40.5
+#          ymax: 46
+#        metrics:
+#          bias:
+#            range: [[-3, 1.5],[-1,1]]
+#          rmse:
+#            range: [[0, 5],[0,1]]
+#      E(z4):
+#        box:
+#          xmin: 38
+#          xmax: 42
+#          ymin: 40.5
+#          ymax: 45
+#        metrics:
+#          bias:
+#            range: [[-3, 1.5],[-1,1]]
+#          rmse:
+#            range: [[0, 5],[0,1]]
+      SW(z2):
+        box:
+          xmin: 27
+          xmax: 33.7
+          ymin: 40.5
+          ymax: 44.4
+        metrics:
+          bias:
+            range: [[-3, 1.5],[-1,1]] # first range is for temp the second one for sal
+          rmse:
+            range: [[0, 5],[0,1]]
+
+
+
+
+
+
+#      NW(z1):
+#        box:
+#          xmin: 27
+#          xmax: 34
+#          ymin: 43
+#          ymax: 47
+#        metrics:
+#          bias:
+#            range: [[-3, 1.5],[-1,1]]
+#          rmse:
+#            range: [[0, 5],[0,1]]
+#      Crimea_Kerch(z3):
+#        box:
+#          xmin: 32
+#          xmax: 38
+#          ymin: 43.5
+#          ymax: 46
+#        metrics:
+#          bias:
+#            range: [[-3, 1.5],[-1,1]]
+#          rmse:
+#            range: [[0, 5],[0,1]]
+#      SE-Batumi(z4):
+#        box:
+#          xmin: 38
+#          xmax: 42
+#          ymin: 40.5
+#          ymax: 45
+#        metrics:
+#          bias:
+#            range: [[-3, 1.5],[-1,1]]
+#          rmse:
+#            range: [[0, 5],[0,1]]
+#      S-Sinop(z5):
+#        box:
+#          xmin: 31
+#          xmax: 38
+#          ymin: 40.5
+#          ymax: 43
+#        metrics:
+#          bias:
+#            range: [[-3, 1.5],[-1,1]]
+#          rmse:
+#            range: [[0, 5],[0,1]]
+#      NW-Bosphorus(z2):
+#        box:
+#          xmin: 27
+#          xmax: 32
+#          ymin: 41
+#          ymax: 43
+#        metrics:
+#          bias:
+#            range: [[-3, 1.5],[-1,1]] # first range is for temp the second one for sal
+#          rmse:
+#            range: [[0, 5],[0,1]]
+
+sst:
+  outdir: '{plot_dir}/SST'
+  variable: 'temperature'
+  dataset_type: 'L4'
+  lsm: '/Users/scausio/Dropbox (CMCC)/PycharmProjects/pqtool/out/lsm/5km/LSM_L4_NRT.npy' #THIS IS A MASK TO REMOVE POINTS NEAR COAST.YOU CAN SKIP THIS FILTERING
+  observationFiles: '/data/opa/bs-mod/obs/intermediate/sat/L4/filtered/sat_{year}.nc' #'/work/opa/ej03515/intermediate/sst/sst_{year}.nc'
+  postproc:
+    threshold:
+      bias: 5
+    metrics:
+    bias:
+      min: -1.5
+      max: 1.5
+    rmse:
+      min: 0
+      max: 1
+    domain:
+      box:
+        xmin: 27
+        xmax: 42.5
+        ymin: 40
+        ymax: 47
+
+hovmoller:
+  outdir: '{plot_dir}/hovmoller'
+  preproc:
+    minDepth: 100 #  in meters  To remove the shallow areas
+    box:
+      xmin: 20
+      xmax: 50
+      ymin: 40.99
+      ymax: 50
+  plot_conf:
+    levels_sal: [17 ,21,0.1] # min, max, step
+    levels_temp: [7.5,8.9,0.05]
+    contours_sal: [18,22,0.5]
+    contours_temp: [7.5,9,0.5]
+    detrend: False
+    maxDepth: 250
+
+anomaly_hovmoller:
+  outdir: '{plot_dir}/anomaly_hov'
+  preproc:
+    minDepth: 100 # in meters To remove the shallow areas
+    box:
+      xmin: 20
+      xmax: 50
+      ymin: 40.99
+      ymax: 50
+  plot_conf:
+    levels_sal: [-0.1 , 0.1, 0.01] # min,max, step
+    levels_temp: [-2,2,0.2]
+    contours_sal: [-0.5,0.5,0.25]
+    contours_temp: [-0.7,0.7,0.3]
+    detrend: False
+    maxDepth: 1500
+
+currents:
+  outdir: '{plot_dir}/currents'
+  mooring:
+    path: '/work/opa/sc33616/nemo/tools/currents_validation/data/obs/*_nan.nc'
+    speed: 'HCSP'
+    dir: 'HCDT'
+  dataset:
+      base: '/work/opa/now_rsc/nemo/runs/{exp}/rebuilt/{exp}_1d_{year}*grid_{grid}.nc'
+      u: 'uo'
+      v: 'vo'
+  spectrum:
+    bin_speed: [0,0.7,0.05] # [min,max, step]
+    bin_dirs: 18
+  timeseries_timeAveraging: 'monthly' #[use yearly, monthly, daily, none]
+
+sla:
+  observationFiles: '/work/opa/ej03515/intermediate/sla/sla_{year}.nc'
+  outdir: '{plot_dir}/SLA'
+  MDT: '/work/opa/now_rsc/nemo/data/mdt/MDT_new.nc'
+  seasons: False # not implemented yet
+  along_track: True
+
+TS:
+  outdir: '{plot_dir}/TS'
+  colorbar: # THIS LIMITS JUST THE COLOR PALETTE, NOT THE DATA ACCORDING TO DEPTH
+    minDepth: 0
+    maxDepth: 200
+    palette: 'jet'
+  density_contours:  [17.25, 19.75, 22.45, 23.85, 25.7, 29, 33.5,35]
+  area:
+    Domain:
+      box:
+        xmin: 27
+        xmax: 42.5
+        ymin: 41.09
+        ymax: 47
+        depth_min: 0
+        depth_max: 2500
+      plot_axis:
+        xmin: 15 #10 #
+        xmax: 35 #39 #22 #
+        ymin: 5
+        ymax: 23 
+    SW(z2):
+      box:
+        xmin: 27
+        xmax: 33.7
+        ymin: 40.5
+        ymax: 44.4 
+        depth_min: 20
+        depth_max: 500
+      plot_axis:
+        xmin: 10 #
+        xmax: 39 #22 #
+        ymin: 5
+        ymax: 23 
+
+MLD:
+  outdir: '{plot_dir}/MLD'
+
+timeseries_salinityVolume:
+  plot_conf:
+    outdir: '{plot_dir}/timeseries_salVol'
+    ylims:  [21.8,22.2]
+
+timeseries_domainAvg:
+  plot_conf:
+    outdir: '{plot_dir}/timeseries_domainAvg'
+    variables:
+      temperature:
+        grid: 'T'
+        depth: [0,50]  # in meters. The tool takes the nearest depth
+        ylims: [[5,29],[7,10]]
+      salinity:
+        grid: 'T'
+        depth: [0,50]  # in meters. The tool takes the nearest depth
+        ylims: [[17,19],[18.2,19.5]]
+      ssh:
+        grid: 'T'
+        ylims:
+
+
+anomaly_timeseries_domainAvg:
+  plot_conf:
+    outdir: '{plot_dir}/anomaly_ts'
+    variables:
+      temperature:
+        grid: 'T'
+        depth: [0,50]  # in meters. The tool takes the nearest depth
+        ylims:
+      salinity:
+        grid: 'T'
+        depth: [0,50]  # in meters. The tool takes the nearest depth
+        ylims: [[-1,1],[-0.5,0.5]]
+      ssh:
+        grid: 'T'
+        ylims:
+
+anomaly_maps:
+  plot_conf:
+    outdir: '{plot_dir}/anomaly_maps'
+    coast_resolution: 'i' # c, i , h, f
+    variables:
+      temperature:
+        grid: 'T'
+        depth: 0 # in meters. The tool takes the nearest depth
+        vmin: -2
+        vmax: 2
+        cmap: 'seismic'
+      salinity:
+        grid: 'T'
+        depth: 0  # in meters. The tool takes the nearest depth
+        vmin: -1
+        vmax: 1
+        cmap: 'seismic'
+      ssh:
+        grid: 'T'
+        vmin: -1
+        vmax: 1
+        cmap: 'seismic'
+
+timeseries_depthBins:
+  plot_conf:
+    outdir: '{plot_dir}/timeseries_depthBins'
+    variables:
+      temperature:
+        grid: 'T'
+        bins: [0,100,200, 500, 1000] # here set the binning
+        ylims: [[7,15],[7,15],[8.5,9.5],[8.5,9.25]] # should be 1 less then bins values
+      salinity:
+        grid: 'T'
+        bins: [0,50,100,200, 500, 1000]
+        ylims: [[18,19],[19,20],[20,21],[21,22],[23,24]]
+
+
+mvr:
+  plot_conf:
+    outdir: '{plot_dir}/MVR'
+    zmin: 5
+    zmax: 10
+    std:
+      temperature:
+        ylims:
+      salinity:
+        ylims:
+    var:
+      temperature:
+        ylims:
+      salinity:
+        ylims:
+    mean:
+      temperature:
+        ylims:
+      salinity:
+        ylims:
+    BIAS:
+      temperature:
+        ylims:
+      salinity:
+        ylims:
+    MSE:
+      temperature:
+        ylims:
+      salinity:
+        ylims:
+    cov:
+      temperature:
+        ylims:
+      salinity:
+        ylims:
+mld:
+  observationFiles: '/work/opa/sc33616/nemo/data/intermediate_argo/argo_{year}.nc'
+  outdir:  '{plot_dir}/MLD_ts/'
+  variables: ['temperature','salinity']
+  criteria: ['sigma02','T02']
+  provider: 'CORA' #argo provider select CMEMS or CORA
+  delta_dens: 0.03
+  min_depth: 10
+  plot_conf:
+    area:
+      Domain:
+        box:
+          xmin: 27
+          xmax: 42.5
+          ymin: 40
+          ymax: 47
+        metrics:
+          bias:
+            range: [[-3, 1.5],[-1,1]]
+          rmse:
+            range: [[0, 5],[0,1]]
