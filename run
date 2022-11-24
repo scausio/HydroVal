@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+from bins.tasks import currentsMoor,hovmoller,Climatologies, sst,sla,DomainAverage,profile_argo, profile_argo,salinityVolume,mld,decimation
 from bins.utils import getConfigurationByID
 import os
 import time
@@ -22,55 +22,48 @@ os.makedirs(outdir,exist_ok=True)
 
 #-------------------------  PREPROCESSING   -------------------------
 # in catalog exp must have suffix _T _U and _V
+for expName in expsName:
+    #profile_argo(expName, years, outdir, bproj,'argo')
+    #sst(expName, years, outdir, bproj)
+    #sla(expName, years, outdir, bproj)
+    #mld(expName, years, outdir,bproj,force=True)
+    hovmoller(expName, years, outdir,bproj)
+    #currentsMoor(expName, list(range(2015,toYear+1)), outdir, bproj)
 
+    #Climatologies().monthly(expName, years, grids, outdir, bproj)
+    # Climatologies().daily(expName, years, grids, outdir, bproj)
+    # Climatologies().yearly(expName, years, grids, outdir, bproj) # this produce also monthly clim
+    #Climatologies().total(expName, years, grids, outdir, bproj)
+
+    salinityVolume(msk,expName, years, outdir,bproj)
+
+    # #Domain average daily preprocessing is required for TS diagram, timeseries of T, S SSH
+    #DomainAverage().daily(expName, years, grids, outdir, bproj)
+    #decimation(expName,['T'],years,outdir,bproj,10)
 
 #-------------------------  PLOTS   -------------------------
 # you can also add title anc stats(...,statistics=False,suptitle=False)
 
-argo_profiles
-argo_profiles_errorEvolution
-hovmoller
-sst
-sla
-Ts.dailyPointProfile
-TS.yearlyMean
-TS.monthlyMean(expsName,years)
-ts_SalinityVol
-ts_Argo2exps
-ts_Argo
-ts_SalinityVol
-ts_DomainAvg
-ts_DepthBins
-MVR
-MLD
-anomaly_hovmoller
-anomaly_ts
-anomaly_map
-decimate
+#profiles_plt.main(expsName,years,statistics=True,suptitle=True)
+#hovmoller_plt.main(expsName,years)
+# sst_plt.main(expsName,years)
+# sla_plt.main(expsName,years)
 
+#TS_plt.dailyPointProfile(expsName,years, 31,43.5)
+#TS_plt.monthlyMean(expsName,years)
+#TS_plt.yearlyMean(expsName,years)
 
+#ts_SalinityVol_plt.main(expsName,years)
+#ts_Argo_plt.main(expsName,years,'argo')
+# ts_Argo2exps_plt.main(expsName, years, 'argo_CORA')
+#ts_DomainAvg_plt.main(expsName,years,statistics=True,suptitle=True)
+#ts_DepthBins_plt.main(expsName,years,suptitle=True)
+#profiles_errorEvolution_plt.main(expsName,years)
+# currents_rose_plt.main(expsName,years)
+#ts_currents_plt.main(expsName,years))
+#mvr_plt.main(expsName, years,regression=True,statistics=True)
+#anomaly_hovmoller_plt.main(expsName,years)
+#anomaly_ts_DomainAvg_plt.main(expsName,years,statistics=True,suptitle=True)
+#anomaly_map_plt.main(expsName,years)
 
-# what we have now
-profiles_plt.main(expsName,years,statistics=True,suptitle=True)
-hovmoller_plt.main(expsName,years)
-sst_plt.main(expsName,years)
-sla_plt.main(expsName,years)
-
-TS_plt.dailyPointProfile(expsName,years, 31,43.5)
-TS_plt.monthlyMean(expsName,years)
-TS_plt.yearlyMean(expsName,years)
-
-ts_SalinityVol_plt.main(expsName,years)
-ts_Argo_plt.main(expsName,years,'argo')
-ts_Argo2exps_plt.main(expsName, years, 'argo_CORA')
-ts_DomainAvg_plt.main(expsName,years,statistics=True,suptitle=True)
-ts_DepthBins_plt.main(expsName,years,suptitle=True)
-profiles_errorEvolution_plt.main(expsName,years)
-currents_rose_plt.main(expsName,years)
-ts_currents_plt.main(expsName,years)
-mvr_plt.main(expsName, years,regression=True,statistics=True)
-anomaly_hovmoller_plt.main(expsName,years)
-anomaly_ts_DomainAvg_plt.main(expsName,years,statistics=True,suptitle=True)
-anomaly_map_plt.main(expsName,years)
-
-ts_MLD_plt.main(expsName,years)
+#ts_MLD_plt.main(expsName,years)
