@@ -151,7 +151,9 @@ def plot(years, variable, depth, dataset, levels, contourLevs, dataType, expName
     xticks.append(years[-1] + 1)
 
     #yticks=[int(depth.values[int(np.floor(i))]) for i in np.linspace(0,len(depth)-1,8)]
-    yticks=getIndexNearestTens(depth.values)
+    depth=depth.values[depth.values<=maxDepth]
+
+    yticks=getIndexNearestTens(depth)
     print (yticks)
     if detrend:
         ds_trended = dataset[variable].values.T
@@ -160,36 +162,31 @@ def plot(years, variable, depth, dataset, levels, contourLevs, dataType, expName
     else:
         ds = dataset[variable].values.T
     if anomaly:
-        #ds = dataset.resample(time='1Y').mean()[variable].values.T
+
         ds = dataset[variable].values.T
         ds = computeHovAnomaly(ds)
-        #im = plt.imshow(ds, cmap=cmap,extent=[0,ds.shape[1],0,ds.shape[0]],origin='bottom',vmin=levels[0],vmax=levels[-1])
 
-        im = plt.contourf(range(ds.shape[1]), depth, ds, levels=levels, extend='both', cmap=cmap)
-        #im = plt.contourf(range(ds.shape[1]), depth, ds[:-1], levels=levels, extend='both', cmap=cmap)
-        cs = plt.contour(np.arange(0.5,ds.shape[1]+0.5,1), range(ds.shape[0]), ds, contourLevs, colors='k')
+        im = plt.contourf(range(ds.shape[1]), depth, ds[:len(depth)], levels=levels, extend='both', cmap=cmap)
+
+        cs = plt.contour(np.arange(0.5,ds.shape[1]+0.5,1), range(len(depth)), ds[:len(depth)], contourLevs, colors='k')
         xticks=xticks[:-1]
         plt.xticks([int(i) for i in np.linspace(0, ds.shape[1]-1, len(xticks))], [str(y) for y in xticks],
                    fontsize=8)
-        plt.yticks([int(i) for i in np.linspace(0, ds.shape[1], len(yticks))], [str(y) for y in yticks],
-               fontsize=8)
+
     else:
-        im = plt.contourf(range(ds.shape[1]), depth, ds, levels=levels, extend='both', cmap=cmap)
-        cs = plt.contour(range(ds.shape[1]), depth, ds, contourLevs, colors='k')
+        im = plt.contourf(range(ds.shape[1]), depth, ds[:len(depth)], levels=levels, extend='both', cmap=cmap)
+        cs = plt.contour(range(ds.shape[1]), depth, ds[:len(depth)], contourLevs, colors='k')
         plt.xticks([int(i) for i in np.linspace(0, ds.shape[1], len(xticks))], [str(y) for y in xticks],
                    fontsize=8)
-
+    plt.yticks([int(i) for i in np.linspace(0, depth[-1], len(yticks))], [str(y) for y in yticks], fontsize=8)
     cbar = plt.colorbar(im, extend='both')
     cbar.ax.set_title(umeas[variable])
 
     plt.clabel(cs, cs.levels, inline=True, colors='k', fmt='%.2f', fontsize=7)
 
-
-
     plt.ylabel('Depth (m)', fontsize=14)
     plt.xlabel('Time (years)', fontsize=14)
     plt.setp(ax.get_xticklabels(), rotation=30)
-
 
     if detrend:
         if anomaly:
@@ -207,10 +204,7 @@ def plot(years, variable, depth, dataset, levels, contourLevs, dataType, expName
             outname = os.path.join(outdir_plots, f'hov_{dataType}_{variable}.png')
             title = f'{variable.capitalize()} {years[0]}-{years[-1]}'
 
-    if anomaly:
-       plt.ylim([0, findNearestDepth(depth.values,maxDepth)])
-    else:
-        plt.ylim([0, maxDepth])
+    plt.ylim([0, maxDepth])
 
     plt.title(title)
     plt.gca().invert_yaxis()

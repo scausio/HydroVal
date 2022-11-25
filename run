@@ -16,25 +16,25 @@ dec=Decimate()
 #-------------------------  PLEASE SELECT YOUR TASKS   -------------------------
 #                   All the following modules are available
 
-argo.profiles()
-argo.errorEvolution()
-sst.compute()
-sla.compute()
-hovmoller.compute()
+# argo.profiles()
+# argo.errorEvolution()
+# sst.compute()
+# sla.compute()
+# hovmoller.compute()
 anomaly.hovmoller()
-anomaly.timeseries()
-anomaly.maps()
-TS_diagram.dailyPointProfile(31,41.5) # TS diagram in a point (x,y)
-TS_diagram.yearlyMean()
-TS_diagram.monthlyMean() # to be tested
-timeseries.argo()
-timeseries.argo2exps()
-timeseries.depthBins()
-timeseries.salinityVol()
-timeseries.domainAverage()
-mld.compute()
-mvr.compute()
-dec.compute(10) # Reduce resolution. N is the decimation factor
+# anomaly.timeseries()
+# anomaly.maps()
+# TS_diagram.dailyPointProfile(31,41.5) # TS diagram in a point (x,y)
+# TS_diagram.yearlyMean()
+# TS_diagram.monthlyMean() # to be tested
+# timeseries.argo()
+# timeseries.argo2exps()
+# timeseries.depthBins()
+# timeseries.salinityVol()
+# timeseries.domainAverage()
+# mld.compute()
+# mvr.compute()
+# dec.compute(10) # Reduce resolution. N is the decimation factor
 
 
 

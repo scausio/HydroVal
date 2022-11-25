@@ -200,7 +200,7 @@ anomaly_hovmoller:
     contours_sal: [-0.5,0.5,0.25]
     contours_temp: [-0.7,0.7,0.3]
     detrend: False
-    maxDepth: 1500
+    maxDepth: 250
 
 currents:
   outdir: '{plot_dir}/currents'
