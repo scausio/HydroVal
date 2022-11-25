@@ -1,88 +1,9 @@
 metadata:
   version: 1
 sources:
-  argoCORA:
-    description: ARGO profiles
-    driver: pqtool.drivers.ArgoSource
-    metadata:
-      coords:
-        latitude: LATITUDE
-        longitude: LONGITUDE
-        depth: N_LEVELS
-        dc_reference: DC_REFERENCE
-        time: JULD
-      variables:
-        temperature: TEMP
-        temperature_qc: TEMP_QC
-        salinity: PSAL
-        salinity_qc: PSAL_QC
-        pressure_qc: PRES_QC
-        time_qc: JULD_QC
-    args:
-      urlpath: '/data/opa/bs-mod/CORA_BS/{date:%Y}/CO_{platform_code:d}_{date:%Y%m%d}_PR_{}.nc'
-  argoNRT:
-    description: ARGO profiles
-    driver: pqtool.drivers.ArgoSource
-    metadata:
-      coords:
-        latitude: LATITUDE
-        longitude: LONGITUDE
-        depth: N_LEVELS
-        dc_reference: DC_REFERENCE
-        time: JULD
-      variables:
-        temperature: TEMP
-        temperature_qc: TEMP_QC
-        salinity: PSAL
-        salinity_qc: PSAL_QC
-        pressure_qc: PRES_QC
-        time_qc: JULD_QC
-    args:
-      urlpath: '/data/opa/bs-mod/CORA_BS/{date:%Y}/CO_{platform_code:d}_{date:%Y%m%d}_PR_{}.nc'
-
-
-  'H0_lrv2_T':
-    driver: pqtool.drivers.NemoSource
-    metadata:
-      coords:
-        latitude: nav_lat
-        longitude: nav_lon
-        depth: deptht
-        time: time_counter
-      variables:
-        temperature: thetao
-        salinity: so
-        ssh: zos 
-    args:
-      urlpath: '/work/opa/now_rsc/nemo/runs/H0_lrv2/rebuilt/H0_lrv2_1d_{date:%Y%m%d}_{}_grid_T.nc'
-  'H0_lrv2_V':
-    driver: pqtool.drivers.NemoSource
-    metadata:
-      coords:
-        latitude: nav_lat
-        longitude: nav_lon
-        depth: depthv
-        time: time_counter
-      variables:
-        v: vo
-    args:
-      urlpath: '/work/opa/now_rsc/nemo/runs/H0_lrv2/rebuilt/H0_lrv2_1d_{date:%Y%m%d}_{}_grid_V.nc'
-  'H0_lrv2_U':
-    driver: pqtool.drivers.NemoSource
-    metadata:
-      coords:
-        latitude: nav_lat
-        longitude: nav_lon
-        depth: depthu
-        time: time_counter
-      variables:
-        u: uo
-    args:
-      urlpath: '/work/opa/now_rsc/nemo/runs/H0_lrv2/rebuilt/H0_lrv2_1d_{date:%Y%m%d}_{}_grid_U.nc'
-
   'rea16_T':
     driver: pqtool.drivers.NemoSource
-    metadata:
+    metadata: &meta_v3_T
       coords:
         latitude: nav_lat
         longitude: nav_lon
@@ -97,7 +18,7 @@ sources:
       urlpath: '/work/oda/ll15918/bsfs/bsfs_rea/bs-rean_016/36_1d_grid_T_{date:%Y%m%d}.nc'
   'rea16_U':
     driver: pqtool.drivers.NemoSource
-    metadata:
+    metadata: &meta_v3_U
       coords:
         latitude: nav_lat
         longitude: nav_lon
@@ -110,7 +31,7 @@ sources:
       urlpath: '/work/oda/ll15918/bsfs/bsfs_rea/bs-rean_016/36_1d_grid_U_{date:%Y%m%d}.nc'
   'rea16_V':
     driver: pqtool.drivers.NemoSource
-    metadata:
+    metadata: &meta_v3_V
       coords:
         latitude: nav_lat
         longitude: nav_lon
@@ -121,3 +42,68 @@ sources:
         ty: sometauy
     args:
       urlpath: '/work/oda/ll15918/bsfs/bsfs_rea/bs-rean_016/36_1d_grid_V_{date:%Y%m%d}.nc'
+
+  'bs-test-int-bdy7_T':
+    driver: pqtool.drivers.NemoSource
+    metadata: &meta_v4_T
+      coords:
+        latitude: nav_lat
+        longitude: nav_lon
+        depth: deptht
+        time: time_counter
+      variables:
+        temperature: thetao
+        salinity: so
+        ssh: zos
+    args:
+      urlpath: '/work/opa/da01720/Experiments/CMEMS2_n4.2/bs-test-int-bdy7/rebuilt/40_1d_{date:%Y%m%d}_{}_T.nc'
+
+  'bs-test-int-bdy7_U':
+    driver: pqtool.drivers.NemoSource
+    metadata: &meta_v4_U
+      coords:
+        latitude: nav_lat
+        longitude: nav_lon
+        depth: depthu
+        time: time_counter
+      variables:
+        u: uo
+    args:
+      urlpath: '/work/opa/da01720/Experiments/CMEMS2_n4.2/bs-test-int-bdy7/rebuilt/40_1d_{date:%Y%m%d}_{}_U.nc'
+
+  'bs-test-int-bdy7_V':
+    driver: pqtool.drivers.NemoSource
+    metadata: &meta_v4_V
+      coords:
+        latitude: nav_lat
+        longitude: nav_lon
+        depth: depthv
+        time: time_counter
+      variables:
+        v: vo
+    args:
+      urlpath: '/work/opa/da01720/Experiments/CMEMS2_n4.2/bs-test-int-bdy7/rebuilt/40_1d_{date:%Y%m%d}_{}_V.nc'
+
+  'bs-test-int-n4.0_T':
+    driver: pqtool.drivers.NemoSource
+    metadata: *meta_v4_T
+    args:
+      urlpath: '/work/opa/da01720/Experiments/CMEMS2_2022_2023/bs-test-int-n4.0/rebuilt/40_1d_{date:%Y%m%d}_{}_T.nc'
+
+  'bs-test-int-n4.0_U':
+    driver: pqtool.drivers.NemoSource
+    metadata: *meta_v4_U
+    args:
+      urlpath: '/work/opa/da01720/Experiments/CMEMS2_2022_2023/bs-test-int-n4.0/rebuilt/40_1d_{date:%Y%m%d}_{}_U.nc'
+
+  'bs-test-int-n4.0_V':
+    driver: pqtool.drivers.NemoSource
+    metadata: *meta_v4_V
+    args:
+      urlpath: '/work/opa/da01720/Experiments/CMEMS2_2022_2023/bs-test-int-n4.0/rebuilt/40_1d_{date:%Y%m%d}_{}_V.nc'
+
+  'bs-test-int-bdy9_T':
+    driver: pqtool.drivers.NemoSource
+    metadata: *meta_v4_T
+    args:
+      urlpath: '/work/opa/da01720/Experiments/CMEMS2_n4.2/bs-test-int-bdy9/rebuilt/40_1d_{date:%Y%m%d}_{}_T.nc'

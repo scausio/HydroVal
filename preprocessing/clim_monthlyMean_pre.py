@@ -47,7 +47,6 @@ else:
 lr_mean = ds.groupby("time.month").mean(dim='time')
 
 #print(lr)
-
 logger.info('Writing output dataset to %s' % args.output)
 lr_mean.to_netcdf(os.path.join(base,f"{name}"))
 lr_mean.mean(dim='month').to_netcdf(os.path.join(base,f"{name.replace('monthMean','yearlyMean')}"))

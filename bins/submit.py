@@ -229,3 +229,13 @@ def submit_decim(expName, grid, year, outdir,bproj,decim_factor, force=False):
     else:
         print('submitting ', cmd)
         os.system(cmd)
+
+def submit_job(job, **kwargs):
+    if 'x' in kwargs:
+        cmd = f"bsub -P 0512 -q s_long python ./bins/jobs.py {job}_{kwargs['x']}_{kwargs['y']}"
+    elif 'decimFac' in kwargs:
+        cmd = f"bsub -P 0512 -q s_long python ./bins/jobs.py {job}_{kwargs['decimFac']}"
+    else:
+        cmd = f'bsub -P 0512 -q s_long python ./bins/jobs.py {job} '
+    print (f'Submitting {cmd}')
+    os.system(cmd)
