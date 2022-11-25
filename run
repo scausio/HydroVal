@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from main import ARGO, SST, SLA, Hovmoller, Anomaly, TS, Timeseries, Decimate, MVR, MLD
 
 # -------------------------  INITIALIZING METHODS   -------------------------
@@ -34,4 +35,10 @@ anomaly.hovmoller()
 # mld.compute()
 # mvr.compute()
 # dec.compute(10) # Reduce resolution. N is the decimation factor
+
+
+
+#-------------------------  PLOTS   -------------------------
+# you can also add title anc stats(...,statistics=False,suptitle=False)
+
 
