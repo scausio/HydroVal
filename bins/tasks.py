@@ -1,9 +1,9 @@
-from bins.bjobs import Bjobs
-from bins.submit import submit_hov, submit_concatPY, submit_curr, submit_PQ, submit_concatClim,submit_salVol,submit_OC,submit_mld,submit_decim
+from bjobs import Bjobs
+from submit import submit_hov, submit_concatPY, submit_curr, submit_PQ, submit_concatClim,submit_salVol,submit_OC,submit_mld,submit_decim
 import xarray as xr
 import time
 import os
-from .utils import getConfigurationByID
+from utils import getConfigurationByID
 from glob import glob
 
 
@@ -188,61 +188,67 @@ class Climatologies():
                 # At least one element is False. Therefore not all the files exist. Run FTP commands again
                 time.sleep(10)  # wait 10 seconds before checking again
 
-    def computeMonthlyMean(self, exp, years, grids, outdir, bproj,chunk=6, force=False):
+    def computeMonthly_YearlyMean(self, exp, years, grids, outdir, bproj,chunk=6, force=False):
         fileBuffer = []
         cmds=[]
         n = chunk
         for year in years:
             for grid in grids:
-                # if n == 0:
-                #     if cmds:
-                #         print(cmds)
-                #         Bjobs(cmds)
-                #         n = chunk
-                #         cmds = []
-                #else:
-                print(f'computing monthly climatology for {exp} {year} and grid {grid}')
-                cmd=submit_PQ('clim_monthlyMean_pre.py', exp, grid, year,False, 'monthMean', outdir,bproj, force=force)
-                try:
-                    os.system(cmd)
-                    time.sleep(5)
-                except:
-
-                    pass
-            #         if cmd:
-            #             cmds.append(cmd)
-            #             n -= 1
-            # if cmds:
-            #     print(cmds)
-            #     Bjobs(cmds)
+                if n == 0:
+                    if cmds:
+                        print(cmds)
+                        Bjobs(cmds)
+                        n = chunk
+                        cmds = []
+                else:
+                    print(f'computing monthly climatology for {exp} {year} and grid {grid}')
+                    cmd=submit_PQ('clim_monthlyMean_pre.py', exp, grid, year,False, 'monthMean', outdir,bproj, force=force)
+                    if cmd:
+                        cmds.append(cmd)
+                        n -= 1
+        if cmds:
+            print(cmds)
+            Bjobs(cmds)
                 #fileBuffer.append(outfile)
                 #time.sleep(1)
         #self.checkClim_complete(fileBuffer)
 
     def computeDailyMean(self, exp, years, grids, outdir, bproj,chunk=6, force=False):
+        cmds=[]
+        n = chunk
         for year in years:
             for grid in grids:
-                print(f'computing daily climatology for {year} and grid {grid}')
-                cmd=submit_PQ('clim_dailyMean_pre.py', exp, grid, year,False, 'dailyMean', outdir,bproj, force=force)
-                if cmd:
-                    os.system(cmd)
-                    time.sleep(10)
-
+                if n == 0:
+                    if cmds:
+                        print(cmds)
+                        Bjobs(cmds)
+                        n = chunk
+                        cmds = []
+                else:
+                    print(f'computing daily climatology for {year} and grid {grid}')
+                    cmd = submit_PQ('clim_dailyMean_pre.py', exp, grid, year, False, 'dailyMean', outdir, bproj,
+                                    force=force)
+                    if cmd:
+                        cmds.append(cmd)
+                        n -= 1
+        if cmds:
+            print(cmds)
+            Bjobs(cmds)
     def daily(self, exp, years, grids, outdir, bproj, force=False):
 
         self.computeDailyMean( exp, years, grids, outdir, bproj, force=force)
 
 
-    def monthly(self, exp, years, grids, outdir, bproj, force=False):
+    def monthly_yearly(self, exp, years, grids, outdir, bproj, force=False):
 
-        self.computeMonthlyMean( exp, years, grids, outdir, bproj, force=force)
+        self.computeMonthly_YearlyMean( exp, years, grids, outdir, bproj, force=force)
 
-        for grid in grids:
-            print(f'concatenating monthly climatology for grid {grid}')
-            submit_concatClim('concat_Clim.py', exp, grid, years, 'monthMean', outdir, bproj, force=force)
+        # for grid in grids:
+        #     print(f'concatenating monthly climatology for grid {grid}')
+        #     submit_concatClim('concat_Clim.py', exp, grid, years, 'monthMean', outdir, bproj, force=force)
 
     def total(self,exp, years, grids, outdir, bproj, force=False):
-        self.computeMonthlyMean(exp, years, grids, outdir, bproj, force=force)
+        self.computeMonthly_YearlyMean(exp, years, grids, outdir, bproj, force=force)
         for grid in grids:
             outfile = os.path.join(outdir, f'{exp}_{grid}_{years[0]}-{years[-1]}_mean.nc')
             if not os.path.exists(outfile):
@@ -300,9 +306,9 @@ class DomainAverage():
                 Bjobs(cmds)
 
         #self.checkClim_complete(fileBuffer)
-        for grid in grids:
-            print(f'concatenating domain mean   for grid {grid}')
-            submit_concatClim('concat_Clim.py', exp, grid, years, 'domainAverage', outdir, bproj, force=force)
+        # for grid in grids:
+        #     print(f'concatenating domain mean   for grid {grid}')
+        #     submit_concatClim('concat_Clim.py', exp, grid, years, 'domainAverage', outdir, bproj, force=force)
 
 class PointExtraction():
     def __init__(self):

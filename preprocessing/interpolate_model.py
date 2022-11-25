@@ -46,7 +46,7 @@ intermediate['model'] = intermediate['model'].astype(str)  # Workaround for bug 
 
 logger.info('Opening catalog %s' % args.catalog)
 cat = intake.open_catalog(args.catalog)
-
+print (args.name)
 dataset = cat[args.name]
 logger.info('Dataset "%s" contains %d files' % (args.name, len(dataset.files)))
 

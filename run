@@ -1,69 +1,37 @@
-#!/usr/bin/env python
-from bins.tasks import currentsMoor,hovmoller,Climatologies, sst,sla,DomainAverage,profile_argo, profile_argo,salinityVolume,mld,decimation
-from bins.utils import getConfigurationByID
-import os
-import time
-from plots import profiles_plt,ts_Argo2exps_plt,ts_Argo_plt,hovmoller_plt,sst_plt,sla_plt,TS_plt,ts_SalinityVol_plt,currents_rose_plt,ts_DomainAvg_plt
-from plots import ts_DepthBins_plt,profiles_errorEvolution_plt,ts_currents_plt,OC_plt,mvr_plt,anomaly_hovmoller_plt,anomaly_ts_DomainAvg_plt
-from plots import anomaly_map_plt,ts_MLD_plt
+from main import ARGO, SST, SLA, Hovmoller, Anomaly, TS, Timeseries, Decimate, MVR, MLD
 
+# -------------------------  INITIALIZING METHODS   -------------------------
+print ('Initializing Job')
+argo = ARGO()
+sst = SST()
+sla = SLA()
+hovmoller = Hovmoller()
+anomaly = Anomaly()
+TS_diagram = TS()
+timeseries = Timeseries()
+mvr = MVR()
+mld = MLD()
+dec=Decimate()
+#-------------------------  PLEASE SELECT YOUR TASKS   -------------------------
+#                   All the following modules are available
 
-expsName=['bs-test-int-n4.0', "bs-test-int-bdy7"]
-fromYear=2016
-toYear=2019
+# argo.profiles()
+# argo.errorEvolution()
+# sst.compute()
+# sla.compute()
+# hovmoller.compute()
+anomaly.hovmoller()
+# anomaly.timeseries()
+# anomaly.maps()
+# TS_diagram.dailyPointProfile(31,41.5) # TS diagram in a point (x,y)
+# TS_diagram.yearlyMean()
+# TS_diagram.monthlyMean() # to be tested
+# timeseries.argo()
+# timeseries.argo2exps()
+# timeseries.depthBins()
+# timeseries.salinityVol()
+# timeseries.domainAverage()
+# mld.compute()
+# mvr.compute()
+# dec.compute(10) # Reduce resolution. N is the decimation factor
 
-#grids=['T',"V", "U"]
-grids=['T']
-years=list(range(fromYear,toYear+1,1))
-outdir=getConfigurationByID('conf.yaml','hvFiles_dir')
-bproj=getConfigurationByID('conf.yaml','bproject')
-msk=getConfigurationByID('conf.yaml','mesh_mask')
-os.makedirs(outdir,exist_ok=True)
-
-#-------------------------  PREPROCESSING   -------------------------
-# in catalog exp must have suffix _T _U and _V
-for expName in expsName:
-    #profile_argo(expName, years, outdir, bproj,'argo')
-    #sst(expName, years, outdir, bproj)
-    #sla(expName, years, outdir, bproj)
-    #mld(expName, years, outdir,bproj,force=True)
-    hovmoller(expName, years, outdir,bproj)
-    #currentsMoor(expName, list(range(2015,toYear+1)), outdir, bproj)
-
-    #Climatologies().monthly(expName, years, grids, outdir, bproj)
-    # Climatologies().daily(expName, years, grids, outdir, bproj)
-    # Climatologies().yearly(expName, years, grids, outdir, bproj) # this produce also monthly clim
-    #Climatologies().total(expName, years, grids, outdir, bproj)
-
-    salinityVolume(msk,expName, years, outdir,bproj)
-
-    # #Domain average daily preprocessing is required for TS diagram, timeseries of T, S SSH
-    #DomainAverage().daily(expName, years, grids, outdir, bproj)
-    #decimation(expName,['T'],years,outdir,bproj,10)
-
-#-------------------------  PLOTS   -------------------------
-# you can also add title anc stats(...,statistics=False,suptitle=False)
-
-#profiles_plt.main(expsName,years,statistics=True,suptitle=True)
-#hovmoller_plt.main(expsName,years)
-# sst_plt.main(expsName,years)
-# sla_plt.main(expsName,years)
-
-#TS_plt.dailyPointProfile(expsName,years, 31,43.5)
-#TS_plt.monthlyMean(expsName,years)
-#TS_plt.yearlyMean(expsName,years)
-
-#ts_SalinityVol_plt.main(expsName,years)
-#ts_Argo_plt.main(expsName,years,'argo')
-# ts_Argo2exps_plt.main(expsName, years, 'argo_CORA')
-#ts_DomainAvg_plt.main(expsName,years,statistics=True,suptitle=True)
-#ts_DepthBins_plt.main(expsName,years,suptitle=True)
-#profiles_errorEvolution_plt.main(expsName,years)
-# currents_rose_plt.main(expsName,years)
-#ts_currents_plt.main(expsName,years))
-#mvr_plt.main(expsName, years,regression=True,statistics=True)
-#anomaly_hovmoller_plt.main(expsName,years)
-#anomaly_ts_DomainAvg_plt.main(expsName,years,statistics=True,suptitle=True)
-#anomaly_map_plt.main(expsName,years)
-
-#ts_MLD_plt.main(expsName,years)
