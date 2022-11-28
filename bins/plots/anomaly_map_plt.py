@@ -44,7 +44,7 @@ def main(runningDir,exps,years):
                         if var == 'temperature':
                             title = f'{year} SST anomaly'
                     anom = ds - time_mean[var].sel(depth=depth, method='nearest')
-                outname=os.path.join(outdir_plots,f'mapAnom_{var}_{year}_{depth}m')
+                outname=os.path.join(outdir_plots,f'mapAnom_{exp}_{var}_{year}_{depth}m')
 
                 plotMap(anom, variable_config.cmap, variable_config.vmin, variable_config.vmax, outname, resolution=conf.coast_resolution, title=title,cbar_title=umeas[var]['mean'])
 
