@@ -7,17 +7,17 @@ from utils import getConfigurationByID
 from glob import glob
 
 
-def sst(exp,years,outdir,bproj,force=False):
-    conf=getConfigurationByID('conf.yaml','sst')
+def sst(runningDir,exp,years,outdir,bproj,force=False):
+    conf=getConfigurationByID(os.path.join(runningDir,'conf.yaml'),'sst')
     for year in years:
-        cmd=submit_PQ('interpolate_model_2D.py', exp, 'T', year, conf.observationFiles.format(year=year), 'sst', outdir,bproj,force=force)
+        cmd=submit_PQ(runningDir,'interpolate_model_2D.py', exp, 'T', year, conf.observationFiles.format(year=year), 'sst', outdir,bproj,force=force)
         if cmd:
             print(cmd)
             Bjobs([cmd])
 
-def sla(exp,years,outdir,bproj,chunk=6,force=False):
+def sla(runningDir,exp,years,outdir,bproj,chunk=6,force=False):
 
-    conf = getConfigurationByID('conf.yaml', 'sla')
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'sla')
     cmds = []
     n=chunk
     for year in years:
@@ -29,7 +29,7 @@ def sla(exp,years,outdir,bproj,chunk=6,force=False):
                 cmds = []
         else:
             #SAT available from 1988 to 2018
-            cmd=submit_PQ('interpolate_model_SLA.py', exp,'T', year,conf.observationFiles.format(year=year),   'sla', outdir,bproj,force=force)
+            cmd=submit_PQ(runningDir,'interpolate_model_SLA.py', exp,'T', year,conf.observationFiles.format(year=year),   'sla', outdir,bproj,force=force)
             if cmd:
                 cmds.append(cmd)
                 n-=1
@@ -38,9 +38,9 @@ def sla(exp,years,outdir,bproj,chunk=6,force=False):
         Bjobs(cmds)
 
 
-def profile_argo(exp, years, outdir, bproj,argoEntry, chunk=6, force=False):
+def profile_argo(runningDir,exp, years, outdir, bproj,argoEntry, chunk=6, force=False):
     cmds=[]
-    conf = getConfigurationByID('conf.yaml', 'profiles')
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'profiles')
     n = chunk
     for year in years:
         if n == 0:
@@ -51,7 +51,7 @@ def profile_argo(exp, years, outdir, bproj,argoEntry, chunk=6, force=False):
                 cmds = []
         else:
             #ARGO available from 2010 to 2018
-            cmd=submit_PQ('interpolate_model.py', exp,'T',year,conf.observationFiles.format(year=year),argoEntry, outdir,bproj,force=force)
+            cmd=submit_PQ(runningDir,'interpolate_model.py', exp,'T',year,conf.observationFiles.format(year=year),argoEntry, outdir,bproj,force=force)
             if cmd:
                 cmds.append(cmd)
                 n -= 1
@@ -59,9 +59,9 @@ def profile_argo(exp, years, outdir, bproj,argoEntry, chunk=6, force=False):
         print(cmds)
         Bjobs(cmds)
 
-def profiletimeseries_argo(exp,years,outdir,bproj,argoEntry,chunk=6,force=False):
+def profiletimeseries_argo(runningDir,exp,years,outdir,bproj,argoEntry,chunk=6,force=False):
     cmds = []
-    conf = getConfigurationByID('conf.yaml', 'timeseriesArgo')
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'timeseriesArgo')
     n = chunk
     for year in years:
         if n == 0:
@@ -72,7 +72,7 @@ def profiletimeseries_argo(exp,years,outdir,bproj,argoEntry,chunk=6,force=False)
                cmds = []
         else:
 
-            cmd=submit_PQ('interpolate_model.py', exp, 'T', year,conf.observationFiles.format(year=year), argoEntry, outdir,bproj,force=force)
+            cmd=submit_PQ(runningDir,'interpolate_model.py', exp, 'T', year,conf.observationFiles.format(year=year), argoEntry, outdir,bproj,force=force)
             try:
                 os.system(cmd)
                 print (f'{cmd} submitted')
@@ -85,7 +85,7 @@ def profiletimeseries_argo(exp,years,outdir,bproj,argoEntry,chunk=6,force=False)
        print(cmds)
        Bjobs(cmds)
 
-def hovmoller(exp,years,outdir,bproj,chunk=6,force=False):
+def hovmoller(runningDir,exp,years,outdir,bproj,chunk=6,force=False):
     cmds=[]
     n = chunk
     for year in years:
@@ -98,7 +98,7 @@ def hovmoller(exp,years,outdir,bproj,chunk=6,force=False):
         else:
             # HOVMOLLER preproc
             #        cmd=submit_PQ('interpolate_model_2D.py', exp, 'T', year, conf.observationFiles.format(year=year), 'sst', outdir,bproj,force=force)
-            cmd=submit_hov(exp, year, outdir,bproj,force=force)
+            cmd=submit_hov(runningDir,exp, year, outdir,bproj,force=force)
             if cmd:
                 cmds.append(cmd)
                 n -= 1
@@ -127,21 +127,21 @@ def currentsMoor(exp,years, outdir,bproj,chunk=6,force=False):
         Bjobs(cmds)
     submit_concatPY('concat_UV.py', exp, years, 'uvMOOR', outdir, force=force)
 
-def salinityVolume(msk,exp,years,outdir,bproj,force=False):
+def salinityVolume(runningDir, msk,exp,years,outdir,bproj,force=False):
     #submit_salVol( exp, years, outdir,bproj,force=force)
     for year in years:
-        submit_salVol(msk,exp, year, outdir, bproj, force=force)
+        submit_salVol(runningDir,msk,exp, year, outdir, bproj, force)
         time.sleep(1)
 
-def mld(exp,years,outdir,bproj,force=False):
-    profile_argo(exp,years,outdir,bproj,'argo',force)
+def mld(runningDir, exp,years,outdir,bproj,force=False):
+    profile_argo(runningDir,exp,years,outdir,bproj,'argo',force)
     for year in years:
-        submit_mld(exp, year, outdir, bproj, force = force)
+        submit_mld(runningDir,exp, year, outdir, bproj, force)
 
-def decimation(exp,grids,years,outdir,bproj,decim_factor,force=False):
+def decimation(runningDir, exp,grids,years,outdir,bproj,decim_factor,force=False):
     for year in years:
         for grid in grids:
-            submit_decim( exp,grid, year, outdir,bproj,decim_factor,force=force)
+            submit_decim(runningDir, exp,grid, year, outdir,bproj,decim_factor,force=force)
             time.sleep(5)
 
 
@@ -188,7 +188,7 @@ class Climatologies():
                 # At least one element is False. Therefore not all the files exist. Run FTP commands again
                 time.sleep(10)  # wait 10 seconds before checking again
 
-    def computeMonthly_YearlyMean(self, exp, years, grids, outdir, bproj,chunk=6, force=False):
+    def computeMonthly_YearlyMean(self,runningDir, exp, years, grids, outdir, bproj,chunk=6, force=False):
         fileBuffer = []
         cmds=[]
         n = chunk
@@ -202,7 +202,7 @@ class Climatologies():
                         cmds = []
                 else:
                     print(f'computing monthly climatology for {exp} {year} and grid {grid}')
-                    cmd=submit_PQ('clim_monthlyMean_pre.py', exp, grid, year,False, 'monthMean', outdir,bproj, force=force)
+                    cmd=submit_PQ(runningDir,'clim_monthlyMean_pre.py', exp, grid, year,False, 'monthMean', outdir,bproj, force=force)
                     if cmd:
                         cmds.append(cmd)
                         n -= 1
@@ -213,7 +213,7 @@ class Climatologies():
                 #time.sleep(1)
         #self.checkClim_complete(fileBuffer)
 
-    def computeDailyMean(self, exp, years, grids, outdir, bproj,chunk=6, force=False):
+    def computeDailyMean(self,runningDir, exp, years, grids, outdir, bproj,chunk=6, force=False):
         cmds=[]
         n = chunk
         for year in years:
@@ -226,7 +226,7 @@ class Climatologies():
                         cmds = []
                 else:
                     print(f'computing daily climatology for {year} and grid {grid}')
-                    cmd = submit_PQ('clim_dailyMean_pre.py', exp, grid, year, False, 'dailyMean', outdir, bproj,
+                    cmd = submit_PQ(runningDir,'clim_dailyMean_pre.py', exp, grid, year, False, 'dailyMean', outdir, bproj,
                                     force=force)
                     if cmd:
                         cmds.append(cmd)
@@ -234,31 +234,31 @@ class Climatologies():
         if cmds:
             print(cmds)
             Bjobs(cmds)
-    def daily(self, exp, years, grids, outdir, bproj, force=False):
+    def daily(self,runningDir, exp, years, grids, outdir, bproj, force=False):
 
-        self.computeDailyMean( exp, years, grids, outdir, bproj, force=force)
+        self.computeDailyMean(runningDir, exp, years, grids, outdir, bproj, force=force)
 
 
-    def monthly_yearly(self, exp, years, grids, outdir, bproj, force=False):
+    def monthly_yearly(self,runningDir, exp, years, grids, outdir, bproj, force=False):
 
-        self.computeMonthly_YearlyMean( exp, years, grids, outdir, bproj, force=force)
+        self.computeMonthly_YearlyMean(runningDir, exp, years, grids, outdir, bproj, force=force)
 
         # for grid in grids:
         #     print(f'concatenating monthly climatology for grid {grid}')
         #     submit_concatClim('concat_Clim.py', exp, grid, years, 'monthMean', outdir, bproj, force=force)
 
-    def total(self,exp, years, grids, outdir, bproj, force=False):
-        self.computeMonthly_YearlyMean(exp, years, grids, outdir, bproj, force=force)
+    def total(self,runningDir,exp, years, grids, outdir, bproj, force=False):
+        self.computeMonthly_YearlyMean(runningDir,exp, years, grids, outdir, bproj, force=force)
         for grid in grids:
             outfile = os.path.join(outdir, f'{exp}_{grid}_{years[0]}-{years[-1]}_mean.nc')
             if not os.path.exists(outfile):
                 buffer=[]
                 for year in years:
                     infile = os.path.join(outdir, f'{exp}_{grid}_{year}_yearlyMean.nc')
-
-                    if not os.path.exists(infile):
-                        xr.open_dataset(os.path.join(outdir, f'{exp}_{grid}_{year}_monthMean.nc')).mean(dim='month').to_netcdf(infile)
+                    print (infile
+                           )
                     buffer.append(xr.open_dataset(infile))
+
                 xr.concat(buffer,dim='year').mean(dim='year').to_netcdf(outfile)
 
 class DomainAverage():
@@ -280,7 +280,7 @@ class DomainAverage():
                 # At least one element is False. Therefore not all the files exist. Run FTP commands again
                 time.sleep(10)  # wait 10 seconds before checking again
 
-    def daily(self, exp, years, grids, outdir, bproj,chunk=6, force=False):
+    def daily(self,runningDir, exp, years, grids, outdir, bproj,chunk=6, force=False):
         fileBuffer = []
         cmds=[]
         n = chunk
@@ -295,7 +295,7 @@ class DomainAverage():
                         cmds = []
                 else:
                     print(f'computing domain mean  for {year} and grid {grid}')
-                    cmd = submit_PQ('domainAverage_pre.py', exp, grid, year,False, 'domainAverage', outdir,bproj, force=force)
+                    cmd = submit_PQ(runningDir,'domainAverage_pre.py', exp, grid, year,False, 'domainAverage', outdir,bproj, force=force)
                     #fileBuffer.append(outfile)
                     #time.sleep(1)
                     if cmd:
@@ -314,12 +314,12 @@ class PointExtraction():
     def __init__(self):
         pass
 
-    def daily(self, exp, years, grids, outdir, bproj, force=False):
+    def daily(self,runningDir, exp, years, grids, outdir, bproj, force=False):
         fileBuffer = []
         for year in years:
             for grid in grids:
                     print(f'computing domain mean  for {year} and grid {grid}')
-                    cmd = submit_PQ('extractPoint_pre.py', exp, grid, year,False, 'domainAverage', outdir,bproj, force=force)
+                    cmd = submit_PQ(runningDir,'extractPoint_pre.py', exp, grid, year,False, 'domainAverage', outdir,bproj, force=force)
                     #fileBuffer.append(outfile)
                     #time.sleep(1)
 

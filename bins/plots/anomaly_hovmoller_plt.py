@@ -12,15 +12,15 @@ from utils import getConfigurationByID,computeAnomaly
 from .hovmoller_plt import hovmoller
 
 
-def main(exps,years):
+def main(runningDir,exps,years):
     print('*** ANOMALIES HOVMOLLER PLOTTING ***')
-    interm_base=getConfigurationByID('conf.yaml','hvFiles_dir')
+    interm_base=getConfigurationByID(os.path.join(runningDir,'conf.yaml'),'hvFiles_dir')
     datatypes=['domain']#'point',
-    conf = getConfigurationByID('conf.yaml', 'anomaly_hovmoller')
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'anomaly_hovmoller')
     for datatype in datatypes:
         print (datatype)
         for exp in exps:
-            hovmoller(interm_base,years,exp, datatype,conf,anomaly=True)
+            hovmoller(runningDir,interm_base,years,exp, datatype,conf,anomaly=True)
 
 
 

@@ -8,11 +8,11 @@ import gsw
 from utils import getConfigurationByID
 sns.set_theme(style="whitegrid")
 
-def TS_yearsRange_mean(base,years,exp, conf):
+def TS_yearsRange_mean(runningDir,base,years,exp, conf):
 
     tmpl='{exp}_T_{year_0}-{year_1}_mean.nc'
 
-    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID('conf.yaml', 'plot_dir')), exp)
+    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'plot_dir')), exp)
     os.makedirs(outdir_plots, exist_ok=True)
     ds_all = xr.open_dataset(os.path.join(base, tmpl.format(exp=exp, year_0=years[0], year_1=years[-1])))
     for region in conf.area:
@@ -38,13 +38,13 @@ def TS_yearsRange_mean(base,years,exp, conf):
         title=''
         plot(temp,sal,dp,outname,conf,region,title)
 
-def TS_yearly_mean(base,years,exp, conf):
+def TS_yearly_mean(runningDir,base,years,exp, conf):
 
     for year in years:
         tmpl = '{exp}_T_{year}_yearlyMean.nc'
         ds_all = xr.open_dataset(os.path.join(base, tmpl.format(exp=exp, year=year)))
 
-        outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID('conf.yaml', 'plot_dir')), exp)
+        outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'plot_dir')), exp)
         os.makedirs(outdir_plots, exist_ok=True)
         for region in conf.area:
             box=conf.area[region].box
@@ -66,10 +66,10 @@ def TS_yearly_mean(base,years,exp, conf):
             plot(temp,sal,dp,outname,conf,region,title)
 
 
-def TS_monthlyMean(base,years,exp, conf):
+def TS_monthlyMean(runningDir,base,years,exp, conf):
 
     tmpl='{exp}_T_{year}_monthMean.nc'
-    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID('conf.yaml', 'plot_dir')), exp)
+    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'plot_dir')), exp)
     os.makedirs(outdir_plots, exist_ok=True)
     for region in conf.area:
         box = conf.area[region].box
@@ -103,11 +103,11 @@ def TS_monthlyMean(base,years,exp, conf):
         plot(temp,sal,dp,outname,conf,region,title)
 
 
-def TS_point(base,years,exp, conf,x,y):
+def TS_point(runningDir,base,years,exp, conf,x,y):
 
     tmpl='{exp}_T_{year}_dailyMean.nc'
 
-    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID('conf.yaml', 'plot_dir')), exp)
+    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'plot_dir')), exp)
     region='Domain'
     os.makedirs(outdir_plots, exist_ok=True)
     box = conf.area[region].box
@@ -256,31 +256,31 @@ def plot_obs(temp,sal,obs_temp, obs_sal, outname,conf,region,title=''):
     plt.savefig(outname)
 
 
-def monthlyMean(exps,years):
+def monthlyMean(runningDir,exps,years):
     print('*** TS PLOTTING ***')
-    base=getConfigurationByID('conf.yaml','hvFiles_dir')
-    conf = getConfigurationByID('conf.yaml', 'TS')
+    base=getConfigurationByID(os.path.join(runningDir,'conf.yaml'),'hvFiles_dir')
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'TS')
     for exp in exps:
-        TS_monthlyMean(base, years, exp, conf)
+        TS_monthlyMean(runningDir,base, years, exp, conf)
 
-def yearlyMean(exps,years):
+def yearlyMean(runningDir,exps,years):
     print('*** TS PLOTTING ***')
-    base=getConfigurationByID('conf.yaml','hvFiles_dir')
-    conf = getConfigurationByID('conf.yaml', 'TS')
+    base=getConfigurationByID(os.path.join(runningDir,'conf.yaml'),'hvFiles_dir')
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'TS')
     for exp in exps:
-        TS_yearly_mean(base, years, exp, conf)
+        TS_yearly_mean(runningDir,base, years, exp, conf)
 
-def dailyPointProfile(exps,years, x,y):
+def dailyPointProfile(runningDir, exps,years, x,y):
     print('*** TS PLOTTING ***')
     # this is for OSR6
-    base=getConfigurationByID('conf.yaml','hvFiles_dir')
-    conf = getConfigurationByID('conf.yaml', 'TS')
+    base=getConfigurationByID(os.path.join(runningDir,'conf.yaml'),'hvFiles_dir')
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'TS')
     for exp in exps:
-        TS_point(base, years, exp, conf,x,y)
+        TS_point(runningDir,base, years, exp, conf,x,y)
 
-def main(exps,years):
+def main(runningDir,exps,years):
     print('*** TS PLOTTING ***')
-    base=getConfigurationByID('conf.yaml','hvFiles_dir')
-    conf = getConfigurationByID('conf.yaml', 'TS')
+    base=getConfigurationByID(os.path.join(runningDir,'conf.yaml'),'hvFiles_dir')
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'TS')
     for exp in exps:
-        TS_yearsRange_mean(base, years, exp, conf)
+        TS_yearsRange_mean(runningDir,base, years, exp, conf)

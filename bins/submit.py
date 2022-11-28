@@ -15,7 +15,7 @@ def submit_concatClim(routine, expName, grid, years, suffix, outdir, bproj, forc
     """
     outfile = os.path.join(outdir, f'{expName}_{grid}_{years[0]}-{years[-1]}_{suffix}.nc')
     grid_files = os.path.join(outdir, f'{expName}_{grid}_*_{suffix}.nc')
-    cmd = f'bsub -P {bproj} python  ./bins/{routine} {grid_files}'
+    cmd = f'bsub -P {bproj} python  {os.getcwd()}/bins/{routine} {grid_files}'
 
     if os.path.exists(outfile):
         if force:
@@ -55,7 +55,7 @@ def submit_concatPY(routine, expName, years, suffix, outdir, force=False):
         os.system(cmd)
 
 
-def submit_PQ(routine, expName, grid, year,inputFile, suffix, outdir,bproj, force=False):
+def submit_PQ(runningDir,routine, expName, grid, year,inputFile, suffix, outdir,bproj, force=False):
     """
 
     :param routine: script to run
@@ -71,9 +71,9 @@ def submit_PQ(routine, expName, grid, year,inputFile, suffix, outdir,bproj, forc
 
     exp=f'{expName}_{grid}'
     if inputFile:
-        cmd = f'bsub -P {bproj} -R "rusage[mem=35G]" python ./preprocessing/{routine} -c catalog_hydroval.yaml -n {exp} -s {int(year) - 1}-12-24 -e {year + 1}-01-06 -i {inputFile}  -o {outdir}/{exp}_{year}_{suffix}.nc'
+        cmd = f'bsub -P {bproj} -R "rusage[mem=35G]" python {os.getcwd()}/preprocessing/{routine} -c {runningDir}/catalog_hydroval.yaml -n {exp} -s {int(year) - 1}-12-24 -e {year + 1}-01-06 -i {inputFile}  -o {outdir}/{exp}_{year}_{suffix}.nc'
     else:
-        cmd = f'bsub -P {bproj} -R "rusage[mem=35G]" python ./preprocessing/{routine} -c catalog_hydroval.yaml -n {exp} -s {int(year) - 1}-12-24 -e {year + 1}-01-06 -o {outdir}/{exp}_{year}_{suffix}.nc'
+        cmd = f'bsub -P {bproj} -R "rusage[mem=35G]" python {os.getcwd()}/preprocessing/{routine} -c {runningDir}/catalog_hydroval.yaml -n {exp} -s {int(year) - 1}-12-24 -e {year + 1}-01-06 -o {outdir}/{exp}_{year}_{suffix}.nc'
 
     if os.path.exists(outfile):
         if force:
@@ -90,7 +90,7 @@ def submit_PQ(routine, expName, grid, year,inputFile, suffix, outdir,bproj, forc
     #return outfile
 
 
-def submit_hov( expName, year, outdir,bproj, force=False):
+def submit_hov(runningDir, expName, year, outdir,bproj, force=False):
     """
 
     :param routine: script to run
@@ -103,7 +103,7 @@ def submit_hov( expName, year, outdir,bproj, force=False):
 
     outfile = os.path.join(outdir, f'{expName}_{year}_domainHov.nc')
     #f'bsub -P {bproj} -R "rusage[mem=35G]" python ./preprocessing/{routine} -c catalog_hydroval.yaml -n {exp} -s {int(year) - 1}-12-24 -e {year + 1}-01-06 -o {outdir}/{exp}_{year}_{suffix}.nc'
-    cmd = f"bsub -R 'rusage[mem=35G]' -P {bproj}  python ./preprocessing/hovmoller_pq.py -c catalog_hydroval.yaml -n {expName} -s {int(year) - 1}-12-24 -e {year + 1}-01-06 -o {outfile}"
+    cmd = f"bsub -R 'rusage[mem=35G]' -P {bproj}  python {os.getcwd()}/preprocessing/hovmoller_pq.py -c {runningDir}/catalog_hydroval.yaml -n {expName} -s {int(year) - 1}-12-24 -e {year + 1}-01-06 -o {outfile}"
     if os.path.exists(outfile):
         if force:
             print('submitting ', cmd)
@@ -127,7 +127,7 @@ def submit_curr( expName, year, outdir,bproj, force=False):
     """
 
     outfile = os.path.join(outdir, f'{expName}_{year}_uvMOOR.nc')
-    cmd = f"bsub -P {bproj}  -R 'rusage[mem=10G]' python   ./preprocessing/currentsMoor_pre.py {expName} {year} {outfile}"
+    cmd = f"bsub -P {bproj}  -R 'rusage[mem=10G]' python   {os.getcwd()}/preprocessing/currentsMoor_pre.py {expName} {year} {outfile}"
     if os.path.exists(outfile):
         if force:
             print('submitting ', cmd)
@@ -141,7 +141,7 @@ def submit_curr( expName, year, outdir,bproj, force=False):
         #os.system(cmd)
         return cmd
 
-def submit_salVol( msk,expName, year, outdir,bproj, force=False):
+def submit_salVol(runningDir, msk,expName, year, outdir,bproj, force=False):
     """
 
     :param routine: script to run
@@ -155,7 +155,7 @@ def submit_salVol( msk,expName, year, outdir,bproj, force=False):
     outfile = os.path.join(outdir, f'{expName}_{year}_salVol.nc')
 
     #cmd = f"bsub -P {bproj} -x -q s_long python ./preprocessing/salinity_volume_pre.py {expName} {','.join(map(str,years))} {outfile}"
-    cmd = f"bsub -P {bproj} -x -q s_long python ./preprocessing/salinity_volume_pq.py -c catalog_hydroval.yaml -m {msk} -n {expName} -s {int(year) - 1}-12-24 -e {year + 1}-01-06 -o {outfile}"
+    cmd = f"bsub -P {bproj} -x -q s_long python {os.getcwd()}/preprocessing/salinity_volume_pq.py -c {runningDir}/catalog_hydroval.yaml -m {msk} -n {expName} -s {int(year) - 1}-12-24 -e {year + 1}-01-06 -o {outfile}"
 
     if os.path.exists(outfile):
         if force:
@@ -167,7 +167,7 @@ def submit_salVol( msk,expName, year, outdir,bproj, force=False):
         print('submitting ', cmd)
         os.system(cmd)
 
-def submit_OC( expName, year, suffix, outdir,bproj,force=False):
+def submit_OC(runningDir, expName, year, suffix, outdir,bproj,force=False):
     """
 
     :param routine: script to run
@@ -178,12 +178,12 @@ def submit_OC( expName, year, suffix, outdir,bproj,force=False):
     :return: absolute path to outfile
     """
     #outfile = os.path.join(outdir, f'{expName}_{year}-{suffix}.nc')
-    cmd = f"bsub -P {bproj} -R 'rusage[mem=20G]' -q s_long python ./preprocessing/overturningCirculation_pre.py {expName} {year} {suffix} {outdir}"
+    cmd = f"bsub -P {bproj} -R 'rusage[mem=20G]' -q s_long python {os.getcwd()}/preprocessing/overturningCirculation_pre.py {expName} {year} {suffix} {outdir}"
     print('submitting ', cmd)
     # os.system(cmd)
     return cmd
 
-def submit_mld( expName, year, outdir,bproj, force=False):
+def submit_mld(runningDir, expName, year, outdir,bproj, force):
     """
 
     :param routine: script to run
@@ -195,7 +195,7 @@ def submit_mld( expName, year, outdir,bproj, force=False):
     """
 
     outfile = os.path.join(outdir, f'{expName}_{year}_mld.nc')
-    cmd = f"bsub -P {bproj} -Is -R 'rusage[mem=10G]' python   ./preprocessing/mld_pre.py {expName} {year} {outfile}"
+    cmd = f"bsub -P {bproj} -Is -R 'rusage[mem=10G]' python   {os.getcwd()}/preprocessing/mld_pre.py {expName} {year} {outfile} {runningDir}"
     if os.path.exists(outfile):
         if force:
             print('submitting ', cmd)
@@ -211,13 +211,13 @@ def submit_mld( expName, year, outdir,bproj, force=False):
 
 
 
-def submit_decim(expName, grid, year, outdir,bproj,decim_factor, force=False):
+def submit_decim(runningDir,expName, grid, year, outdir,bproj,decim_factor, force=False):
 
     outfile = os.path.join(outdir, f'{expName}_{grid}_{year}_decim{decim_factor}.nc')
 
     exp=f'{expName}_{grid}'
 
-    cmd = f'bsub -P {bproj} -R "rusage[mem=15G]" -M 3145728 python ./preprocessing/decimate_pre.py -c catalog_hydroval.yaml -n {exp} -s {int(year) - 1}-12-24 -e {year + 1}-01-06 -o {outfile}'
+    cmd = f'bsub -P {bproj} -R "rusage[mem=15G]" -M 3145728 python {os.getcwd()}/preprocessing/decimate_pre.py -c {runningDir}/catalog_hydroval.yaml -n {exp} -s {int(year) - 1}-12-24 -e {year + 1}-01-06 -o {outfile}'
 
     if os.path.exists(outfile):
         if force:
@@ -230,12 +230,12 @@ def submit_decim(expName, grid, year, outdir,bproj,decim_factor, force=False):
         print('submitting ', cmd)
         os.system(cmd)
 
-def submit_job(job, **kwargs):
+def submit_job(job,runningDir, **kwargs):
     if 'x' in kwargs:
-        cmd = f"bsub -P 0512 -q s_long python ./bins/jobs.py {job}_{kwargs['x']}_{kwargs['y']}"
+        cmd = f"bsub -P 0512 -q s_long python {os.getcwd()}/bins/jobs.py {job}_{kwargs['x']}_{kwargs['y']} {runningDir}"
     elif 'decimFac' in kwargs:
-        cmd = f"bsub -P 0512 -q s_long python ./bins/jobs.py {job}_{kwargs['decimFac']}"
+        cmd = f"bsub -P 0512 -q s_long python {os.getcwd()}/bins/jobs.py {job}_{kwargs['decimFac']} {runningDir}"
     else:
-        cmd = f'bsub -P 0512 -q s_long python ./bins/jobs.py {job} '
+        cmd = f'bsub -P 0512 -q s_long python {os.getcwd()}/bins/jobs.py {job} {runningDir}'
     print (f'Submitting {cmd}')
     os.system(cmd)

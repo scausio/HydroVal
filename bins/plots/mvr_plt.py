@@ -119,9 +119,9 @@ def mse_daily(dif):
     return np.sqrt(sqrd_dif.groupby([pd.Grouper(level='time', freq='1D')]).mean())
 
 
-def mvr(exp, intermediate, yearName,regression,statistics):
-    conf = getConfigurationByID('conf.yaml', 'mvr').plot_conf
-    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID('conf.yaml', 'plot_dir')), exp)
+def mvr(runningDir,exp, intermediate, yearName,regression,statistics):
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'mvr').plot_conf
+    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'plot_dir')), exp)
     os.makedirs(outdir_plots, exist_ok=True)
 
     ds = intermediate.where((intermediate.depth > conf.zmin) & (intermediate.depth < conf.zmax))
@@ -170,19 +170,19 @@ def mvr(exp, intermediate, yearName,regression,statistics):
             regression=regression, statistics=statistics)
 
 
-def main(expsName,years,regression=False,statistics=False):
+def main(runningDir,expsName,years,regression=False,statistics=False):
     print ('*** MVR PLOTTING ***')
     for exp in expsName:
         files=[]
         for year in years:
-            interm_tmpl = os.path.join(getConfigurationByID('conf.yaml', 'hvFiles_dir'), f'{exp}_T_{year}_argo.nc')
+            interm_tmpl = os.path.join(getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'hvFiles_dir'), f'{exp}_T_{year}_argo.nc')
             intermediate=xr.open_dataset(interm_tmpl).isel(model=0)
-            mvr(exp, intermediate, year,regression,statistics)
+            mvr(runningDir,exp, intermediate, year,regression,statistics)
             files.append(interm_tmpl)
         if len(years)>1:
             print(years)
-            intermediate = xr.open_mfdataset(os.path.join(getConfigurationByID('conf.yaml', 'hvFiles_dir'), f'{exp}_T_*_argo.nc')).isel(model=0)
-            mvr(exp, intermediate, f'{years[0]}-{years[-1]}', regression, statistics)
+            intermediate = xr.open_mfdataset(os.path.join(getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'hvFiles_dir'), f'{exp}_T_*_argo.nc')).isel(model=0)
+            mvr(runningDir,exp, intermediate, f'{years[0]}-{years[-1]}', regression, statistics)
 
 
 

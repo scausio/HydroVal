@@ -76,7 +76,7 @@ def detrend_series(values):
 def computeHovAnomaly(data):
     return (np.nanmean(data,axis=1) - data.T).T
 
-def hovmoller(base, years, exp, datatype, conf, anomaly=False):
+def hovmoller(runningDir,base, years, exp, datatype, conf, anomaly=False):
     print('plotting %s' % datatype)
     try:
         buffer=[]
@@ -96,14 +96,14 @@ def hovmoller(base, years, exp, datatype, conf, anomaly=False):
                              conf.plot_conf.contours_sal[2])
 
     if anomaly:
-        plot(years,  'temperature', ds['depth'], ds, levels_temp, contours_temp, datatype, exp, conf, anomaly=anomaly,
+        plot(runningDir,years,  'temperature', ds['depth'], ds, levels_temp, contours_temp, datatype, exp, conf, anomaly=anomaly,
              cmap=cm.balance, )
-        plot(years, 'salinity', ds['depth'], ds, levels_sal, contours_sal, datatype, exp, conf, anomaly=anomaly,
+        plot(runningDir,years, 'salinity', ds['depth'], ds, levels_sal, contours_sal, datatype, exp, conf, anomaly=anomaly,
              cmap=cm.balance, )
     else:
-        plot(years,  'temperature', ds['depth'], ds, levels_temp, contours_temp, datatype, exp, conf, anomaly=anomaly,
+        plot(runningDir,years,  'temperature', ds['depth'], ds, levels_temp, contours_temp, datatype, exp, conf, anomaly=anomaly,
              cmap=cm.thermal, )
-        plot(years, 'salinity', ds['depth'], ds, levels_sal, contours_sal, datatype, exp, conf, anomaly=anomaly,
+        plot(runningDir,years, 'salinity', ds['depth'], ds, levels_sal, contours_sal, datatype, exp, conf, anomaly=anomaly,
              cmap=cm.haline, )
     print('done')
 
@@ -138,11 +138,11 @@ def getIndexNearestTens(depths):
     return buffer
 
 
-def plot(years, variable, depth, dataset, levels, contourLevs, dataType, expName, conf, anomaly, cmap='jet'):
+def plot(runningDir,years, variable, depth, dataset, levels, contourLevs, dataType, expName, conf, anomaly, cmap='jet'):
     umeas = {'temperature': 'T [°C]', 'salinity': 'S [PSU]'}
     maxDepth = conf.plot_conf.maxDepth
     detrend = conf.plot_conf.detrend
-    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID('conf.yaml', 'plot_dir')), expName)
+    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'plot_dir')), expName)
     os.makedirs(outdir_plots, exist_ok=True)
     print(dataset[variable].values.shape)
 
@@ -213,16 +213,16 @@ def plot(years, variable, depth, dataset, levels, contourLevs, dataType, expName
     plt.close()
 
 
-def main(exps,years):
+def main(runningDir,exps,years):
     print('*** HOVMOLLER PLOTTING ***')
-    interm_base=getConfigurationByID('conf.yaml','hvFiles_dir')
+    interm_base=getConfigurationByID(os.path.join(runningDir,'conf.yaml'),'hvFiles_dir')
     datatypes=['domain']#'point',
-    conf = getConfigurationByID('conf.yaml', 'hovmoller')
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'hovmoller')
     for datatype in datatypes:
         print (datatype)
         #hov_difference(exps, datatype)
         for exp in exps:
-            hovmoller(interm_base, years, exp, datatype, conf)
+            hovmoller(runningDir,interm_base, years, exp, datatype, conf)
 
 
 

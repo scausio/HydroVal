@@ -79,17 +79,17 @@ def concatYears(statistics_dict, exp_names):
 
 
 
-def main(exps,years,statistics,suptitle):
+def main(runningDir,exps,years,statistics,suptitle):
     plt.rcParams["figure.figsize"] = 5, 8
 
     plt.rcParams.update({'font.size': 14,"font.serif":"Palatino"})
 
     print('*** SST PLOTTING ***')
-    conf = getConfigurationByID('conf.yaml','sst')
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'),'sst')
 
-    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID('conf.yaml', 'plot_dir')), '-'.join(exps))
+    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'plot_dir')), '-'.join(exps))
     os.makedirs(outdir_plots,exist_ok=True)
-    interm_path=getConfigurationByID('conf.yaml','hvFiles_dir')
+    interm_path=getConfigurationByID(os.path.join(runningDir,'conf.yaml'),'hvFiles_dir')
 
     try:
         lsm=np.load(conf.lsm)

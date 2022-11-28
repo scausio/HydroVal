@@ -8,15 +8,15 @@ from utils import getConfigurationByID, cut_area, getBins
 plt.rcParams["figure.figsize"] = 5, 8
 plt.rcParams.update({'font.size': 14})
 
-def main(exps,years):
+def main(runningDir,exps,years):
     print('*** TIMESERIES ARGO PLOTTING ***')
-    conf = getConfigurationByID('conf.yaml','timeseriesArgo')
-    interm_tmpl = os.path.join(getConfigurationByID('conf.yaml', 'hvFiles_dir'), '{exp}_{year}_argo.nc')
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'),'timeseriesArgo')
+    interm_tmpl = os.path.join(getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'hvFiles_dir'), '{exp}_{year}_argo.nc')
     bins = np.array(list(map(float, conf.postproc.bins)))
 
     x_labels = ['%s-%s' % (int(i), int(j)) for i, j in zip(bins[:-1], bins[1:])]
     print(bins)
-    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID('conf.yaml', 'plot_dir')),
+    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'plot_dir')),
                                 '-'.join(exps))
     os.makedirs(outdir_plots,exist_ok=True)
     for exp in exps:

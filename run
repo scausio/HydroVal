@@ -1,41 +1,69 @@
 #!/usr/bin/env python
 from main import ARGO, SST, SLA, Hovmoller, Anomaly, TS, Timeseries, Decimate, MVR, MLD
+from sys import argv
+from bins.utils import getConfigurationByID
+import os
+
+try:
+    runningDir=sys.argv[1]
+except:
+    runningDir=os.getcwd()
 
 # -------------------------  INITIALIZING METHODS   -------------------------
 print ('Initializing Job')
-argo = ARGO()
-sst = SST()
-sla = SLA()
-hovmoller = Hovmoller()
-anomaly = Anomaly()
-TS_diagram = TS()
-timeseries = Timeseries()
-mvr = MVR()
-mld = MLD()
-dec=Decimate()
-#-------------------------  PLEASE SELECT YOUR TASKS   -------------------------
+argo = ARGO(runningDir)
+sst = SST(runningDir)
+sla = SLA(runningDir)
+hovmoller = Hovmoller(runningDir)
+anomaly = Anomaly(runningDir)
+TS_diagram = TS(runningDir)
+timeseries = Timeseries(runningDir)
+mvr = MVR(runningDir)
+mld = MLD(runningDir)
+dec=Decimate(runningDir)
+
+tasks=getConfigurationByID(os.path.join(runningDir, 'conf.yaml'),'tasks')
+#-------------------------  YOUR TASKS   -------------------------
 #                   All the following modules are available
-
-# argo.profiles()
-# argo.errorEvolution()
-# sst.compute()
-# sla.compute()
-# hovmoller.compute()
-anomaly.hovmoller()
-# anomaly.timeseries()
-# anomaly.maps()
-# TS_diagram.dailyPointProfile(31,41.5) # TS diagram in a point (x,y)
-# TS_diagram.yearlyMean()
-# TS_diagram.monthlyMean() # to be tested
-# timeseries.argo()
-# timeseries.argo2exps()
-# timeseries.depthBins()
-# timeseries.salinityVol()
-# timeseries.domainAverage()
-# mld.compute()
-# mvr.compute()
-# dec.compute(10) # Reduce resolution. N is the decimation factor
-
+os.chdir('/work/opa/bsfs-dev/HydroVal/')
+if tasks.argo_profiles=='T':
+    argo.profiles()
+if tasks.argo_errorEvolution=='T':
+    argo.errorEvolution()
+if tasks.sst=='T':
+    sst.compute()
+if tasks.sla == 'T':
+    sla.compute()
+if tasks.hovmoller=='T':
+    hovmoller.compute()
+if tasks.anomalies.hovmoller=='T':
+    anomaly.hovmoller()
+if tasks.anomalies.timeseries=='T':
+    anomaly.timeseries()
+if tasks.anomalies.maps == 'T':
+    anomaly.maps()
+if tasks.TS_diagram.pointProfile == 'T':
+    TS_diagram.dailyPointProfile(tasks.TS_diagram.pointProfile.coords[0],tasks.TS_diagram.pointProfile.coords[1]) # TS diagram in a point (x,y)
+if tasks.TS_diagram.yearlyMean == 'T':
+    TS_diagram.yearlyMean()
+if tasks.TS_diagram.monthlyMean == 'T':
+    TS_diagram.monthlyMean() # to be tested
+if tasks.timeseries.argo == 'T':
+    timeseries.argo()
+if tasks.timeseries.argo2exps == 'T':
+    timeseries.argo2exps()
+if tasks.timeseries.depthBins == 'T':
+    timeseries.depthBins()
+if tasks.timeseries.salinityVol == 'T':
+    timeseries.salinityVol()
+if tasks.timeseries.domainAverage == 'T':
+    timeseries.domainAverage()
+if tasks.mld == 'T':
+    mld.compute()
+if tasks.mvr_statistics == 'T':
+    mvr.compute()
+if tasks.decimation.flag == 'T':
+    dec.compute(tasks.decimation.decim_factor)
 
 
 #-------------------------  PLOTS   -------------------------

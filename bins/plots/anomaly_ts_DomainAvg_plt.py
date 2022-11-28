@@ -10,11 +10,11 @@ from .ts_DomainAvg_plt import umeas,plot
 sns.set_theme(style="whitegrid")
 
 
-def main(exps,years,statistics=False,suptitle=False):
+def main(runningDir,exps,years,statistics=False,suptitle=False):
     print ('*** ANMOALIES TIMESERIES PLOTTING ***')
-    conf=getConfigurationByID('conf.yaml', 'anomaly_timeseries_domainAvg').plot_conf
-    interm_base=getConfigurationByID('conf.yaml', 'hvFiles_dir')
-    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID('conf.yaml', 'plot_dir')),
+    conf=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'anomaly_timeseries_domainAvg').plot_conf
+    interm_base=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'hvFiles_dir')
+    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'plot_dir')),
                                 '-'.join(exps))
     os.makedirs(outdir_plots, exist_ok=True)
     for var in conf.variables:

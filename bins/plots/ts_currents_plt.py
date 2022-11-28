@@ -167,11 +167,11 @@ def plotTimeseries(exps,years,interm_base,outdir_plots,timeAveraging):
     fig2.savefig(os.path.join(outdir_plots, f"{'-'.join(exps)}_rmse_currents_{timeAveraging}_ts.png"))
 
 
-def main(exps,years):
-    interm_base=getConfigurationByID('conf.yaml','hvFiles_dir')
+def main(runningDir,exps,years):
+    interm_base=getConfigurationByID(os.path.join(runningDir,'conf.yaml'),'hvFiles_dir')
 
-    conf = getConfigurationByID('conf.yaml', 'currents')
-    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID('conf.yaml', 'plot_dir')), '-'.join(exps))
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'currents')
+    outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'plot_dir')), '-'.join(exps))
     os.makedirs(outdir_plots, exist_ok=True)
     timeAveraging=conf.timeseries_timeAveraging
 

@@ -13,7 +13,6 @@ def get_MLD_1D_temp(ds, tempName,depths,delta_temp=0.2,min_depth=10):
 def get_MLD_1D_dens(ds,tempName,salName,depths,delta_dens=0.01,min_depth=10):
     #dens=sw.dens(ds[salName],ds[tempName],depths)
     dens = sw.dens0(ds[salName], ds[tempName])
-    print (dens.shape)
     d10 = dens[np.searchsorted(depths,min_depth)]
     if np.isnan(d10):
         return np.nan
@@ -84,12 +83,8 @@ def daily_meterAveraged(ds, year, conf):
 
     ds['diff_T'] = ds['model_temperature'] - ds['temperature']
     ds['diff_S'] = ds['model_salinity'] - ds['salinity']
-    print(0)
-    print(ds)
-    print(1)
     monthly_ds = ds.isel(model=0).groupby('time.month')
     print(monthly_ds)
-    print(2)
     buffer_time = []
     buffer_obs = []
     buffer_mod = []
@@ -146,10 +141,10 @@ def daily_meterAveraged(ds, year, conf):
 
 
 
-def mld_1D(exp,year,conf,outfile):
+def mld_1D(runningDir,exp,year,conf,outfile):
 
     print ('*** MLD timeseries PREPROCESSING ***')
-    interm_tmpl = os.path.join(getConfigurationByID('conf.yaml', 'hvFiles_dir'), '{exp}_{year}_argo.nc')
+    interm_tmpl = os.path.join(getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'hvFiles_dir'), '{exp}_{year}_argo.nc')
     try:
         ds_year = xr.open_dataset(interm_tmpl.format(year=year, exp=f'{exp}_T'))
         mmean_ds=month_meterAveraged(ds_year, year,conf)
@@ -160,16 +155,17 @@ def mld_1D(exp,year,conf,outfile):
         ds=getEmptyMonthlyResult([f'{exp}_T'],year)
         ds.to_netcdf(outfile)
 
-def mld_2D(exp,year,conf,outfile):
+def mld_2D(runningDir,exp,year,conf,outfile):
     pass
 
 def main():
     exp=argv[1]
     year=argv[2]
     outfile=argv[3]
-    conf = getConfigurationByID('conf.yaml', 'mld')
-    mld_1D(exp,year,conf,outfile)
-    mld_2D(exp, year, conf, outfile)
+    runningDir=argv[4]
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'mld')
+    mld_1D(runningDir,exp,year,conf,outfile)
+    mld_2D(runningDir,exp, year, conf, outfile)
 
 if __name__ == '__main__':
     main()

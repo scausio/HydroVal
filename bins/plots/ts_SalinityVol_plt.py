@@ -10,11 +10,11 @@ import xarray as xr
 sns.set_theme(style="whitegrid")
 
 
-def main(exps,years,statistics=False,suptitle=False):
+def main(runningDir,exps,years,statistics=False,suptitle=False):
     print ('*** SALINITY VOLUME PLOTTING ***')
-    conf=getConfigurationByID('conf.yaml', 'timeseries_salinityVolume')
-    interm_base=getConfigurationByID('conf.yaml', 'hvFiles_dir')
-    outdir_plots = os.path.join(conf.plot_conf.outdir.format(plot_dir=getConfigurationByID('conf.yaml', 'plot_dir')),
+    conf=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'timeseries_salinityVolume')
+    interm_base=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'hvFiles_dir')
+    outdir_plots = os.path.join(conf.plot_conf.outdir.format(plot_dir=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'plot_dir')),
                                 '-'.join(exps))
     os.makedirs(outdir_plots, exist_ok=True)
 

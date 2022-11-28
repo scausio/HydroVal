@@ -31,11 +31,11 @@ def format_date(x, pos=None):
 
 
 
-def main(exps,years,test=False,statistics=False,suptitle=False):
+def main(runningDir,exps,years,test=False,statistics=False,suptitle=False):
 
-    interm_tmpl = os.path.join(getConfigurationByID('conf.yaml', 'hvFiles_dir'), '{exp}_{year}_mld.nc')
-    conf = getConfigurationByID('conf.yaml','mld')
-    outdir_plots=os.path.join(conf.outdir.format(plot_dir=getConfigurationByID('conf.yaml','plot_dir')),'-'.join(exps))
+    interm_tmpl = os.path.join(getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'hvFiles_dir'), '{exp}_{year}_mld.nc')
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'),'mld')
+    outdir_plots=os.path.join(conf.outdir.format(plot_dir=getConfigurationByID(os.path.join(runningDir,'conf.yaml'),'plot_dir')),'-'.join(exps))
     os.makedirs(outdir_plots,exist_ok=True)
     ds_all=concat_interms_filled(exps, years, interm_tmpl)
     outname = os.path.join(outdir_plots, f"{years[0]}-{years[-1]}_mld_stats.png")

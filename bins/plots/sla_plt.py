@@ -20,14 +20,14 @@ def swap_mdt(data):
     return data
 
 
-def main(exps, years,statistics, suptitle):
-    conf = getConfigurationByID('conf.yaml', 'sla')
-    base = getConfigurationByID('conf.yaml', 'hvFiles_dir')
+def main(runningDir,exps, years,statistics, suptitle):
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'sla')
+    base = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'hvFiles_dir')
     if len(exps)>1:
-        outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID('conf.yaml', 'plot_dir')),
+        outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'plot_dir')),
                                     '-'.join(exps))
     else:
-        outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID('conf.yaml', 'plot_dir')),exps[0])
+        outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'plot_dir')),exps[0])
     os.makedirs(outdir_plots,exist_ok=True)
     seasons = conf.seasons  # 'DJF', 'MAM', 'JJA', 'SON' or None for all year
 

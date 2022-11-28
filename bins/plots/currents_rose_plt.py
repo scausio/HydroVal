@@ -40,15 +40,15 @@ def computeDirection(u, v):
     print(deg)
     return deg
 
-def main(exps,years):
-    interm_base=getConfigurationByID('conf.yaml','hvFiles_dir')
+def main(runningDir,exps,years):
+    interm_base=getConfigurationByID(os.path.join(runningDir,'conf.yaml'),'hvFiles_dir')
 
-    conf = getConfigurationByID('conf.yaml', 'currents')
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'currents')
     bin_speed=np.arange(conf.spectrum.bin_speed[0],conf.spectrum.bin_speed[1],conf.spectrum.bin_speed[2])
     bin_dir=conf.spectrum.bin_dirs
 
     for exp in exps:
-        outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID('conf.yaml', 'plot_dir')),exp)
+        outdir_plots = os.path.join(conf.outdir.format(plot_dir=getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'plot_dir')),exp)
         os.makedirs(outdir_plots,exist_ok=True)
         buffer=[]
         for year in years:

@@ -27,7 +27,7 @@ cat = intake.open_catalog(args.catalog)
 
 dataset = cat[f"{args.name}_T"]
 logger.info('Dataset "%s" contains %d files' % (args.name, len(dataset.files)))
-conf = getConfigurationByID('conf.yaml', 'hovmoller')
+conf = getConfigurationByID(os.path.join(os.path.dirname(args.catalog),'conf.yaml'), 'hovmoller')
 
 if args.start_date:
     dataset = dataset.subset(date=slice(args.start_date, None))

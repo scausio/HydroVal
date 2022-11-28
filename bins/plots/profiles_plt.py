@@ -60,14 +60,14 @@ plt.rcParams["figure.figsize"] = 5, 8
 plt.rcParams.update({'font.size': 14})
 
 
-def main(exps,years,statistics=False,suptitle=False):
+def main(runningDir,exps,years,statistics=False,suptitle=False):
     print ('*** PROFILES PLOTTING ***')
 
-    interm_tmpl = os.path.join(getConfigurationByID('conf.yaml', 'hvFiles_dir'), '{exp}_{year}_argo.nc')
-    conf = getConfigurationByID('conf.yaml','profiles')
+    interm_tmpl = os.path.join(getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'hvFiles_dir'), '{exp}_{year}_argo.nc')
+    conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'),'profiles')
     bins = np.array(list(map(float, conf.postproc.bins)))
 
-    outdir_plots=os.path.join(conf.outdir.format(plot_dir=getConfigurationByID('conf.yaml','plot_dir')),'-'.join(exps))
+    outdir_plots=os.path.join(conf.outdir.format(plot_dir=getConfigurationByID(os.path.join(runningDir,'conf.yaml'),'plot_dir')),'-'.join(exps))
     os.makedirs(outdir_plots,exist_ok=True)
 
     salinity_bias=[]
