@@ -115,7 +115,7 @@ def submit_hov(runningDir, expName, year, outdir,bproj, force=False):
         print('submitting ', cmd)
         return cmd
 
-def submit_curr( expName, year, outdir,bproj, force=False):
+def submit_curr(runningDir, expName, year, outdir,bproj, force=False):
     """
 
     :param routine: script to run
@@ -127,7 +127,7 @@ def submit_curr( expName, year, outdir,bproj, force=False):
     """
 
     outfile = os.path.join(outdir, f'{expName}_{year}_uvMOOR.nc')
-    cmd = f"bsub -P {bproj}  -R 'rusage[mem=10G]' python   {os.getcwd()}/preprocessing/currentsMoor_pre.py {expName} {year} {outfile}"
+    cmd = f"bsub -P {bproj}  -R 'rusage[mem=10G]' python   {os.getcwd()}/preprocessing/currentsMoor_pre.py {expName} {year} {outfile} {runningDir}"
     if os.path.exists(outfile):
         if force:
             print('submitting ', cmd)
@@ -160,12 +160,14 @@ def submit_salVol(runningDir, msk,expName, year, outdir,bproj, force=False):
     if os.path.exists(outfile):
         if force:
             print('submitting ', cmd)
-            os.system(cmd)
+            return cmd
+            #os.system(cmd)
         else:
             print(f'Salinity Volume preprocessing : completed!')
     else:
         print('submitting ', cmd)
-        os.system(cmd)
+        return cmd
+        #os.system(cmd)
 
 def submit_OC(runningDir, expName, year, suffix, outdir,bproj,force=False):
     """

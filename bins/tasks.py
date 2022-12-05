@@ -8,6 +8,7 @@ from glob import glob
 
 
 def sst(runningDir,exp,years,outdir,bproj,force=False):
+    os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'), 'hv_path'))
     conf=getConfigurationByID(os.path.join(runningDir,'conf.yaml'),'sst')
     for year in years:
         cmd=submit_PQ(runningDir,'interpolate_model_2D.py', exp, 'T', year, conf.observationFiles.format(year=year), 'sst', outdir,bproj,force=force)
@@ -16,7 +17,7 @@ def sst(runningDir,exp,years,outdir,bproj,force=False):
             Bjobs([cmd])
 
 def sla(runningDir,exp,years,outdir,bproj,chunk=6,force=False):
-
+    os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'), 'hv_path'))
     conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'sla')
     cmds = []
     n=chunk
@@ -39,6 +40,7 @@ def sla(runningDir,exp,years,outdir,bproj,chunk=6,force=False):
 
 
 def profile_argo(runningDir,exp, years, outdir, bproj,argoEntry, chunk=6, force=False):
+    os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'), 'hv_path'))
     cmds=[]
     conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'profiles')
     n = chunk
@@ -60,6 +62,7 @@ def profile_argo(runningDir,exp, years, outdir, bproj,argoEntry, chunk=6, force=
         Bjobs(cmds)
 
 def profiletimeseries_argo(runningDir,exp,years,outdir,bproj,argoEntry,chunk=6,force=False):
+    os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'), 'hv_path'))
     cmds = []
     conf = getConfigurationByID(os.path.join(runningDir,'conf.yaml'), 'timeseriesArgo')
     n = chunk
@@ -86,6 +89,7 @@ def profiletimeseries_argo(runningDir,exp,years,outdir,bproj,argoEntry,chunk=6,f
        Bjobs(cmds)
 
 def hovmoller(runningDir,exp,years,outdir,bproj,chunk=6,force=False):
+    os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'), 'hv_path'))
     cmds=[]
     n = chunk
     for year in years:
@@ -106,7 +110,8 @@ def hovmoller(runningDir,exp,years,outdir,bproj,chunk=6,force=False):
         print(cmds)
         Bjobs(cmds)
 
-def currentsMoor(exp,years, outdir,bproj,chunk=6,force=False):
+def currentsMoor(runningDir,exp,years, outdir,bproj,chunk=6,force=False):
+    os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'), 'hv_path'))
     cmds=[]
     n = chunk
     for year in years:
@@ -118,7 +123,7 @@ def currentsMoor(exp,years, outdir,bproj,chunk=6,force=False):
                 cmds = []
         else:
             # CURRENTS rose- emodnet available 2015-2019
-            cmd=submit_curr( exp, year, outdir,bproj,force=force)
+            cmd=submit_curr(runningDir, exp, year, outdir,bproj,force=force)
             if cmd:
                 cmds.append(cmd)
                 n -= 1
@@ -128,17 +133,40 @@ def currentsMoor(exp,years, outdir,bproj,chunk=6,force=False):
     submit_concatPY('concat_UV.py', exp, years, 'uvMOOR', outdir, force=force)
 
 def salinityVolume(runningDir, msk,exp,years,outdir,bproj,force=False):
+    os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'), 'hv_path'))
     #submit_salVol( exp, years, outdir,bproj,force=force)
+    #for year in years:
+    #    submit_salVol(runningDir,msk,exp, year, outdir, bproj, force)
+    #    time.sleep(1)
+    cmds = []
+    n=chunk
     for year in years:
-        submit_salVol(runningDir,msk,exp, year, outdir, bproj, force)
-        time.sleep(1)
+        if n == 0:
+            if cmds:
+                print(cmds)
+                Bjobs(cmds)
+                n = chunk
+                cmds = []
+        else:
+            cmd=submit_salVol(runningDir, msk, exp, year, outdir, bproj, force)
+            time.sleep(1)
+
+            if cmd:
+                cmds.append(cmd)
+                n-=1
+    if cmds:
+        print(cmds)
+        Bjobs(cmds)
+
 
 def mld(runningDir, exp,years,outdir,bproj,force=False):
+    os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'), 'hv_path'))
     profile_argo(runningDir,exp,years,outdir,bproj,'argo',force)
     for year in years:
         submit_mld(runningDir,exp, year, outdir, bproj, force)
 
 def decimation(runningDir, exp,grids,years,outdir,bproj,decim_factor,force=False):
+    os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'), 'hv_path'))
     for year in years:
         for grid in grids:
             submit_decim(runningDir, exp,grid, year, outdir,bproj,decim_factor,force=force)
@@ -189,6 +217,7 @@ class Climatologies():
                 time.sleep(10)  # wait 10 seconds before checking again
 
     def computeMonthly_YearlyMean(self,runningDir, exp, years, grids, outdir, bproj,chunk=6, force=False):
+        os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'), 'hv_path'))
         fileBuffer = []
         cmds=[]
         n = chunk
@@ -214,6 +243,7 @@ class Climatologies():
         #self.checkClim_complete(fileBuffer)
 
     def computeDailyMean(self,runningDir, exp, years, grids, outdir, bproj,chunk=6, force=False):
+        os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'), 'hv_path'))
         cmds=[]
         n = chunk
         for year in years:
@@ -235,12 +265,12 @@ class Climatologies():
             print(cmds)
             Bjobs(cmds)
     def daily(self,runningDir, exp, years, grids, outdir, bproj, force=False):
-
+        os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'), 'hv_path'))
         self.computeDailyMean(runningDir, exp, years, grids, outdir, bproj, force=force)
 
 
     def monthly_yearly(self,runningDir, exp, years, grids, outdir, bproj, force=False):
-
+        os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'), 'hv_path'))
         self.computeMonthly_YearlyMean(runningDir, exp, years, grids, outdir, bproj, force=force)
 
         # for grid in grids:
@@ -248,6 +278,7 @@ class Climatologies():
         #     submit_concatClim('concat_Clim.py', exp, grid, years, 'monthMean', outdir, bproj, force=force)
 
     def total(self,runningDir,exp, years, grids, outdir, bproj, force=False):
+        os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'), 'hv_path'))
         self.computeMonthly_YearlyMean(runningDir,exp, years, grids, outdir, bproj, force=force)
         for grid in grids:
             outfile = os.path.join(outdir, f'{exp}_{grid}_{years[0]}-{years[-1]}_mean.nc')
@@ -281,6 +312,7 @@ class DomainAverage():
                 time.sleep(10)  # wait 10 seconds before checking again
 
     def daily(self,runningDir, exp, years, grids, outdir, bproj,chunk=6, force=False):
+        os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'), 'hv_path'))
         fileBuffer = []
         cmds=[]
         n = chunk
@@ -315,16 +347,11 @@ class PointExtraction():
         pass
 
     def daily(self,runningDir, exp, years, grids, outdir, bproj, force=False):
-        fileBuffer = []
+        os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'), 'hv_path'))
         for year in years:
             for grid in grids:
                     print(f'computing domain mean  for {year} and grid {grid}')
                     cmd = submit_PQ(runningDir,'extractPoint_pre.py', exp, grid, year,False, 'domainAverage', outdir,bproj, force=force)
-                    #fileBuffer.append(outfile)
-                    #time.sleep(1)
-
-
-        #self.checkClim_complete(fileBuffer)
         for grid in grids:
             print(f'concatenating domain mean   for grid {grid}')
             submit_concatClim('concat_Clim.py', exp, grid, years, 'domainAverage', outdir, bproj, force=force)

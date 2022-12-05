@@ -52,7 +52,7 @@ def plot(conf,exps,var,years,interm_base,outdir_plots,suptitle,statistics, depth
             allTicks=np.array([(str(m)[:7]).replace('-','') for m in mm.time.values])
             print(np.arange(firstMonth, monthsLen, 12))
             print(n)
-            ax.plot(np.arange(firstMonth-1,monthsLen,12), ym,label=f'YM {exp}',linewidth=3,color=custom_palette[n])
+            ax.plot(np.arange(firstMonth-1,monthsLen,12)+6, ym,label=f'YM {exp}',linewidth=3,color=custom_palette[n])
             ax.plot(range(monthsLen),mm,marker='x', linewidth=1,label=f'MM {exp}',color=custom_palette[n+1])
             ni+=1
 

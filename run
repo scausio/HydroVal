@@ -25,7 +25,7 @@ dec=Decimate(runningDir)
 tasks=getConfigurationByID(os.path.join(runningDir, 'conf.yaml'),'tasks')
 #-------------------------  YOUR TASKS   -------------------------
 #                   All the following modules are available
-os.chdir('/work/opa/bsfs-dev/HydroVal/')
+os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'),'hv_path'))
 if tasks.argo_profiles=='T':
     argo.profiles()
 if tasks.argo_errorEvolution=='T':
