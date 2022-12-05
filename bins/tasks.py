@@ -132,7 +132,7 @@ def currentsMoor(runningDir,exp,years, outdir,bproj,chunk=6,force=False):
         Bjobs(cmds)
     submit_concatPY('concat_UV.py', exp, years, 'uvMOOR', outdir, force=force)
 
-def salinityVolume(runningDir, msk,exp,years,outdir,bproj,force=False):
+def salinityVolume(runningDir, msk,exp,years,outdir,bproj,chunk=6,force=False):
     os.chdir(getConfigurationByID(os.path.join(runningDir, 'conf.yaml'), 'hv_path'))
     #submit_salVol( exp, years, outdir,bproj,force=force)
     #for year in years:
